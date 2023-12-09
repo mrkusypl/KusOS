@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - okno dialogowe</title>
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <style>
+        body {
+            display: flex;
+            position: absolute;
+            background-color: rgb(66, 69, 83);
+            background-image: url(./wallpaper.jpg);
+            background-position-x: center;
+            color: #eeeeee;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 14px;
+            text-shadow: 0px 0px #00000042;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .okno {
+            min-width: 400px;
+            height: min-content;
+            width: fit-content;
+            background-color: #3d3d3d;
+            border-radius: 5px 5px 5px 5px;
+            user-select: none;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.438);
+            border: 1px solid #8a8a8a;
+            margin: 0;
+            transition: opacity 200ms, transform 300ms;
+        }
+
+        .light > .okno  {
+            background-color: #eeeeee;
+            color: #111111;
+            border: 1px solid #1b6ac5;
+        }
+        
+        .light > .okno > .pasek  {
+            background-color: #1b6ac5;
+            color: white;
+            border-bottom: 1px solid #397ece;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        }
+
+        .light > .okno > .pasek > .close    {
+            background-color: #ec2020;
+            box-shadow: 0px 0px 3px #111111;
+        }
+
+        .pasek {
+            background-color: #333333;
+            border-radius: 5px 5px 0 0;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #464646;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .close {
+            width: 32px;
+            border-radius: 5px 5px 5px 5px;
+            text-align: center;
+            background-color: #333333;
+            float: right;
+            justify-content: center;
+            margin: -5px;
+            color: #DFDFDF;
+            display: flex;
+            align-items: center;
+            height: 32px;
+            text-shadow: 1px 1px 3px #111111;
+            
+        }
+
+        .przycisk {
+            width: 100px;
+            height: 30px;
+            border-radius: 5px 5px 5px 5px;
+            border: 1px solid rgb(78, 78, 78);
+            text-align: center;
+            background-color: rgb(102, 102, 102);
+            float: right;
+            justify-content: center;
+            color: #DFDFDF;
+            display: flex;
+            align-items: center;
+            margin: 5px;
+        }
+
+        .light > .okno > .przyciski > .przycisk {
+            background-color: rgb(212, 212, 212);
+            color:#111111;
+            font-size: 15px;
+        }
+
+        .przycisk:hover {
+            transition: background-color 0.1s;
+            background-color: rgb(62, 73, 226);
+            color: #eeeeee;
+        }
+
+        .light > .okno > .przyciski > .przycisk:hover {
+            transition: background-color 0.1s;
+            background-color: rgb(190, 190, 190);
+        }
+
+        .przycisk:active {
+            transition: background-color 0.05s;
+            background-color: rgb(60, 68, 170);
+        }
+
+        .light > .okno > .przyciski > .przycisk:active {
+            transition: background-color 0.05s;
+            background-color: rgb(148, 148, 148);
+        }
+
+        .close:hover {
+            transition: background-color 0.2s;
+            background-color: rgb(218, 40, 40);
+            color: #eeeeee;
+        }
+
+        .close:active {
+            transition: background-color 0.05s;
+            background-color: rgb(180, 34, 34);
+            color: #eeeeee;
+        }
+
+        .content {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .przyciski {
+            display: flex;
+            justify-content: center;
+            width: auto;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+
+        .ikona {
+            font-size: 40px;
+        }
+    </style>
+    <script>
+        $(function () {
+            $(".okno").draggable({ handle: ".pasek", cancel: ".close", scroll: false });
+        });
+
+        function closeModal() {
+            blok = document.getElementById("okno");
+            blok.style.opacity = "0%";
+            blok.style.transform = "scale(0.9) rotateX(20deg)";
+            blok.style.pointerEvents = "none";
+            setTimeout(() => {
+                blok.style.display = "none";
+            }, 200);
+        }
+
+        function openModal() {
+            blok = document.getElementById("okno");
+            blok.style.left = "";
+            blok.style.top = "";
+            blok.style.display = "block";
+            blok.style.pointerEvents = "auto";
+            setTimeout(() => {
+                blok.style.opacity = "100%";
+                blok.style.transform = "scale(1) rotateX(0deg)";
+            }, 1);
+        }
+    </script>
+</head>
+
+<body class="light">
+    <div id="okno" class="okno">
+        <div class="pasek">
+            Wystąpił błąd
+            <div class="close" title="Zamnkij" onclick="closeModal()">
+                ⨉
+            </div>
+        </div>
+        <div class="content">
+            <span class="ikona">🛑</span>
+            Wystąpił błąd 0x0291823. Skontaktuj się z administratorem systemu.
+        </div>
+        <div class="przyciski">
+            <div class="przycisk" onclick="closeModal()">
+                OK
+            </div>
+        </div>
+    </div>
+    <div style="display: flex; position: absolute; left: 10px; top: 10px;">
+        <button style="color: black; margin-right: 5px;" onclick="openModal()">otworz pierdolone okno</button>
+        <button style="color: black;" onclick="lightMode()">przełącz na dark mode / light mode</button>
+    </div>
+    <script>
+        function lightMode() {
+            document.body.classList.toggle("light");
+        }
+    </script>
+</body>
+
+</html>

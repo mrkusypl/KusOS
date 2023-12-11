@@ -258,6 +258,8 @@
 
     <script>
         var zindex = 1;
+        var oknoXpos = [];
+        var oknoYpos = [];
 
         $(function () {
             $(".okno").draggable({ handle: ".pasek", cancel: ".button-pasek", scroll: false });
@@ -350,12 +352,42 @@
         }
 
         function przywrocModal(oknoId) {
-            openModal(oknoId, 1);
+            var $blok = $("#okno" + oknoId);
+            $blok.animate({
+                left: oknoXpos[oknoId],
+                top: oknoYpos[oknoId]
+            }, 200);
+            $blok.css({
+                "display": "block",
+                "pointer-events": "auto"
+            });
+            setTimeout(function () {
+                $blok.css({
+                    "opacity": "100%",
+                    "transform": "scale(1) rotateX(0deg)"
+                });
+            }, 1);
             toggleModal(oknoId, "minimalizujModal(" + oknoId + ")");
         }
 
         function minimalizujModal(oknoId) {
-            closeModal(oknoId, 1);
+            const $przycisk = $("#oknoprzycisk" + oknoId);
+            var $blok = $("#okno" + oknoId);
+
+            oknoXpos[oknoId] = $blok.position().left;
+            oknoYpos[oknoId] = $blok.position().top;
+
+            $blok.animate({
+                left: $przycisk.position().left,
+                top: 0
+            }, 200);
+            $blok.css({
+                "opacity": "0%",
+                "transform": "scale(0.5)"
+            });
+            setTimeout(function () {
+                $blok.hide();
+            }, 200);
             toggleModal(oknoId, "przywrocModal(" + oknoId + ")");
         }
 
@@ -447,8 +479,8 @@
     </div>
 
     <div style="display: flex; position: absolute; left: 10px; bottom: 10px;">
-        <button style="color: black; margin-right: 5px;" onclick="openModal(1, 0)">otworz pierdolone okno nr 1</button>
-        <button style="color: black; margin-right: 5px;" onclick="openModal(2, 0)">otworz pierdolone okno nr 2</button>
+        <button style="color: black; margin-right: 5px;" onclick="openModal(1, 0)">otworz okno nr 1</button>
+        <button style="color: black; margin-right: 5px;" onclick="openModal(2, 0)">otworz okno nr 2</button>
         <button style="color: black;" onclick="lightMode()">przełącz na dark mode / light mode</button>
     </div>
 

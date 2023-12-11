@@ -9,9 +9,15 @@
 
     <title>Demo - okno dialogowe</title>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js" integrity="sha512-0bEtK0USNd96MnO4XhH8jhv3nyRF0eK87pJke6pkYf3cM0uDIhNJy9ltuzqgypoIFXw3JSuiy04tVk4AjpZdZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+        integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"
+        integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"
+        integrity="sha512-0bEtK0USNd96MnO4XhH8jhv3nyRF0eK87pJke6pkYf3cM0uDIhNJy9ltuzqgypoIFXw3JSuiy04tVk4AjpZdZw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <style>
         body {
@@ -37,8 +43,8 @@
             background-color: #3d3d3d;
             border-radius: 5px;
             user-select: none;
+            border: 1px solid #00000000;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.438);
-            border: 1px solid #8a8a8a;
             margin: 0;
             transition: opacity 200ms, transform 300ms;
             z-index: 1000;
@@ -48,6 +54,13 @@
         .light .okno {
             background-color: #eeeeee;
             color: #111111;
+        }
+
+        .oknoActive {
+            border: 1px solid #8a8a8a;
+        }
+
+        .light .oknoActive {
             border: 1px solid #1b6ac5;
         }
 
@@ -84,13 +97,20 @@
             justify-content: space-between;
         }
 
+        .pasekBlur {
+            background-color: #3d3d3d;
+        }
+
+        .light .okno .pasekBlur {
+            background-color: #478ddd;
+        }
+
         .button-pasek,
         .przycisk,
         .light .okno .przyciski .przycisk {
             width: 32px;
             border-radius: 5px;
             text-align: center;
-            background-color: #333333;
             float: right;
             justify-content: center;
             margin-left: 2px;
@@ -257,52 +277,56 @@
     </style>
 
     <script>
+        const dlugoscAnimacji = 250;
+
         var zindex = 1;
         var oknoXpos = [];
         var oknoYpos = [];
+        var oknoIlosc = 1;
 
         $(function () {
             $(".okno").draggable({ handle: ".pasek", cancel: ".button-pasek", scroll: false });
+            $()
         });
 
-        function clickDisable(name) {
-            $(name).css({
-                "pointer-events": "none"
-            });
-        }
-
-        function clickEnable(name) {
-            $(name).css({
-                "pointer-events": "auto"
-            });
+        function setClickState(name, isEnabled) {
+            const pointerEventsValue = isEnabled ? "auto" : "none";
+            $(name).css("pointer-events", pointerEventsValue);
         }
 
         function closeModal(oknoId, min) {
             const $przycisk = $("#oknoprzycisk" + oknoId);
             var $blok = $("#okno" + oknoId);
+            oknoIlosc--;
             $blok.css({
                 "opacity": "0%",
                 "transform": "scale(0.9) rotateX(20deg)"
             });
-            clickDisable($blok);
+            setClickState($blok, false);
             setTimeout(function () {
                 $blok.hide();
-            }, 200);
+            }, dlugoscAnimacji);
             if (min != 1) {
                 $przycisk.css({
                     "opacity": "0%",
                     "transform": "scale(0.9) rotateX(20deg)"
                 });
-                clickDisable($przycisk);
+                setClickState($przycisk, false);
                 setTimeout(function () {
                     $przycisk.hide();
-                }, 200);
+                }, dlugoscAnimacji);
             }
         }
 
         function openModal(oknoId, przy) {
             const $przycisk = $("#oknoprzycisk" + oknoId);
             var $blok = $("#okno" + oknoId);
+            
+            oknoIlosc++;
+            $przycisk.css({
+                "order": oknoIlosc++
+            });
+
             $przycisk.show();
 
             var windowWidth = $(window).width();
@@ -322,7 +346,7 @@
                 $przycisk.css({
                     "display": "flex"
                 });
-                clickEnable($przycisk);
+                setClickState($przycisk, true);
                 setTimeout(function () {
                     $przycisk.css({
                         "opacity": "100%",
@@ -333,7 +357,8 @@
             $blok.css({
                 "display": "block"
             });
-            clickEnable($blok);
+            setClickState($blok, true);
+            fokus(oknoId);
             setTimeout(function () {
                 $blok.css({
                     "opacity": "100%",
@@ -341,7 +366,7 @@
                 });
             }, 1);
 
-            if($blok.attr("resizable")=="true") {
+            if ($blok.attr("resizable") == "true") {
                 $(function () {
                     $blok.resizable({
                         minHeight: divHeight,
@@ -367,30 +392,34 @@
             const $przycisk = $("#oknoprzycisk" + oknoId);
             var $blok = $("#okno" + oknoId);
 
-            clickDisable($przycisk);
+            setClickState($przycisk, false);
+            fokus(oknoId);
             $blok.animate({
                 left: oknoXpos[oknoId],
                 top: oknoYpos[oknoId]
-            }, 200);
+            }, dlugoscAnimacji);
             $blok.css({
                 "display": "block"
             });
-            clickEnable($blok);
+            setClickState($blok, true);
             setTimeout(function () {
                 $blok.css({
                     "opacity": "100%",
                     "transform": "scale(1) rotateX(0deg)"
                 });
             }, 1);
-            setTimeout(clickEnable($przycisk), 500);
-            toggleModal(oknoId, "minimalizujModal(" + oknoId + ")");
+            toggleModal(oknoId, "minimalizujrzycisk(" + oknoId + ")");
+
+            setTimeout(function () {
+                setClickState($przycisk, true);
+            }, dlugoscAnimacji);
         }
 
         function minimalizujModal(oknoId) {
             const $przycisk = $("#oknoprzycisk" + oknoId);
             var $blok = $("#okno" + oknoId);
 
-            clickDisable($przycisk);
+            setClickState($przycisk, false);
 
             oknoXpos[oknoId] = $blok.position().left;
             oknoYpos[oknoId] = $blok.position().top;
@@ -398,17 +427,43 @@
             $blok.animate({
                 left: $przycisk.position().left,
                 top: 0
-            }, 200);
+            }, dlugoscAnimacji);
             $blok.css({
                 "opacity": "0%",
                 "transform": "scale(0.5)"
             });
-            clickDisable($blok);
+            setClickState($blok, false);
             setTimeout(function () {
                 $blok.hide();
-            }, 200);
-            toggleModal(oknoId, "przywrocModal(" + oknoId + ")");
-            setTimeout(clickEnable($przycisk), 500);
+            }, dlugoscAnimacji);
+            toggleModal(oknoId, "przywrocPrzycisk(" + oknoId + ")");
+
+            setTimeout(function () {
+                setClickState($przycisk, true);
+            }, dlugoscAnimacji);
+        }
+
+        function minimalizujPrzycisk(oknoId) {
+            var $blok = $("#okno" + oknoId);
+
+            if($blok.css("z-index") == zindex - 1) {
+                minimalizujModal(oknoId);
+                $przycisk.toggleClass("pasekprzyciskactive");
+                toggleModal(oknoId, "przywrocPrzycisk(" + oknoId + ")");
+                fokus(oknoId);
+            }
+            else {
+                fokus(oknoId);
+            }
+        }
+
+        function przywrocPrzycisk(oknoId) {
+            const $przycisk = $("#oknoprzycisk" + oknoId);
+            var $blok = $("#okno" + oknoId);
+
+            przywrocModal(oknoId);
+            $przycisk.toggleClass("pasekprzyciskactive");
+            toggleModal(oknoId, "minimalizujPrzycisk(" + oknoId + ")");
         }
 
         $(document).ready(function () {
@@ -430,8 +485,12 @@
 
         function fokus(oknoId) {
             zindex += 1;
-            if(oknoId!=0) {
+            $(".pasek").addClass("pasekBlur");
+            $(".okno").removeClass("oknoActive");
+            if (oknoId != 0) {
                 $("#okno" + oknoId).css("z-index", zindex);
+                $("#okno" + oknoId +" .pasek").removeClass("pasekBlur");
+                $("#okno" + oknoId).addClass("oknoActive");
             }
             else {
                 $(".pasekzadan").css("z-index", zindex);
@@ -443,10 +502,10 @@
 <body class="">
     <div class="pasekzadan" onmousedown="fokus(0)">
         <div class="pasekprzyciski">
-            <div class="pasekprzycisk pasekprzyciskactive" id="oknoprzycisk1" onclick="minimalizujModal(1)">
+            <div class="pasekprzycisk pasekprzyciskactive" id="oknoprzycisk1" style="order: 1;" onclick="minimalizujPrzycisk(1)">
                 🛑 Wystąpił błąd
             </div>
-            <div class="pasekprzycisk" id="oknoprzycisk2" onclick="przywrocModal(2)">
+            <div class="pasekprzycisk" id="oknoprzycisk2" style="order: 2;" onclick="przywrocPrzycisk(2)">
                 ⚙️ Ustawienia
             </div>
         </div>

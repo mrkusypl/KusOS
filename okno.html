@@ -2,20 +2,23 @@
 <html lang="pl">
 
 <head>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Demo - okno dialogowe</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js" integrity="sha512-0bEtK0USNd96MnO4XhH8jhv3nyRF0eK87pJke6pkYf3cM0uDIhNJy9ltuzqgypoIFXw3JSuiy04tVk4AjpZdZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
     <style>
         body {
-            display: flex;
+            display: body;
             position: absolute;
-            background-color: rgb(66, 69, 83);
-            background-image: url(./wallpaper.jpg);
-            background-position-x: center;
+            background: url(./wallpaper.jpg) bottom;
             color: #eeeeee;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
             font-size: 14px;
@@ -30,113 +33,130 @@
 
         .okno {
             min-width: 400px;
-            height: min-content;
-            width: fit-content;
+            height: max-content;
+            width: max-content;
             background-color: #3d3d3d;
-            border-radius: 5px 5px 5px 5px;
+            border-radius: 5px;
             user-select: none;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.438);
             border: 1px solid #8a8a8a;
             margin: 0;
             transition: opacity 200ms, transform 300ms;
+            z-index: 1000;
+            position: absolute;
         }
 
-        .light > .okno  {
+        .light .okno {
             background-color: #eeeeee;
             color: #111111;
             border: 1px solid #1b6ac5;
         }
-        
-        .light > .okno > .pasek  {
+
+        .light .okno .pasek {
             background-color: #1b6ac5;
             color: white;
             border-bottom: 1px solid #397ece;
-            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+            text-shadow: 1px 1px 3px #111111;
         }
 
-        .light > .okno > .pasek > .close    {
-            background-color: #ec2020;
+        .light .okno .pasek .button-pasek {
             box-shadow: 0px 0px 3px #111111;
+        }
+
+        .light .okno .pasek .close {
+            background-color: #ec2020;
+        }
+
+        .light .okno .pasek .minimalizuj {
+            background-color: #2061ec;
         }
 
         .pasek {
             background-color: #333333;
             border-radius: 5px 5px 0 0;
-            padding: 10px;
+            padding: 5px 5px 5px 10px;
             margin-bottom: 5px;
             border-bottom: 1px solid #464646;
             font-weight: bold;
             font-size: 17px;
+            display: inline-flex;
+            width: -webkit-fill-available;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .close {
+        .button-pasek,
+        .przycisk,
+        .light .okno .przyciski .przycisk {
             width: 32px;
-            border-radius: 5px 5px 5px 5px;
+            border-radius: 5px;
             text-align: center;
             background-color: #333333;
             float: right;
             justify-content: center;
-            margin: -5px;
+            margin-left: 2px;
+            margin-right: 2px;
             color: #DFDFDF;
             display: flex;
             align-items: center;
             height: 32px;
             text-shadow: 1px 1px 3px #111111;
-            
         }
 
-        .przycisk {
+        .przycisk,
+        .light .okno .przyciski .przycisk {
             width: 100px;
             height: 30px;
-            border-radius: 5px 5px 5px 5px;
             border: 1px solid rgb(78, 78, 78);
-            text-align: center;
             background-color: rgb(102, 102, 102);
-            float: right;
-            justify-content: center;
-            color: #DFDFDF;
-            display: flex;
-            align-items: center;
             margin: 5px;
         }
 
-        .light > .okno > .przyciski > .przycisk {
+        .light .okno .przyciski .przycisk {
             background-color: rgb(212, 212, 212);
-            color:#111111;
+            color: #111111;
             font-size: 15px;
         }
 
-        .przycisk:hover {
+        .przycisk:hover,
+        .light .okno .przyciski .przycisk:hover {
             transition: background-color 0.1s;
             background-color: rgb(62, 73, 226);
             color: #eeeeee;
         }
 
-        .light > .okno > .przyciski > .przycisk:hover {
-            transition: background-color 0.1s;
-            background-color: rgb(190, 190, 190);
-        }
-
-        .przycisk:active {
+        .przycisk:active,
+        .light .okno .przyciski .przycisk:active {
             transition: background-color 0.05s;
             background-color: rgb(60, 68, 170);
+            transform: scale(0.98);
         }
 
-        .light > .okno > .przyciski > .przycisk:active {
-            transition: background-color 0.05s;
-            background-color: rgb(148, 148, 148);
+        .button-pasek:hover {
+            transition: background-color 0.2s;
+            color: #eeeeee;
         }
 
         .close:hover {
-            transition: background-color 0.2s;
             background-color: rgb(218, 40, 40);
+        }
+
+        .minimalizuj:hover {
+            background-color: rgb(40, 117, 218);
+        }
+
+        .button-pasek:active {
+            transition: background-color 0.05s;
             color: #eeeeee;
+            transform: scale(0.98);
         }
 
         .close:active {
-            transition: background-color 0.05s;
             background-color: rgb(180, 34, 34);
-            color: #eeeeee;
+        }
+
+        .minimalizuj:active {
+            background-color: rgb(34, 73, 180);
         }
 
         .content {
@@ -156,42 +176,246 @@
         .ikona {
             font-size: 40px;
         }
-    </style>
-    <script>
-        $(function () {
-            $(".okno").draggable({ handle: ".pasek", cancel: ".close", scroll: false });
-        });
 
-        function closeModal() {
-            blok = document.getElementById("okno");
-            blok.style.opacity = "0%";
-            blok.style.transform = "scale(0.9) rotateX(20deg)";
-            blok.style.pointerEvents = "none";
-            setTimeout(() => {
-                blok.style.display = "none";
-            }, 200);
+        .powiadomienie {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.438);
         }
 
-        function openModal() {
-            blok = document.getElementById("okno");
-            blok.style.left = "";
-            blok.style.top = "";
-            blok.style.display = "block";
-            blok.style.pointerEvents = "auto";
-            setTimeout(() => {
-                blok.style.opacity = "100%";
-                blok.style.transform = "scale(1) rotateX(0deg)";
+        .pasekzadan {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            background-color: #1b6ac5;
+            width: 100%;
+            height: 50px;
+            user-select: none;
+        }
+
+        .zegar {
+            display: grid;
+            justify-items: flex-end;
+            float: right;
+            position: absolute;
+            right: 10px;
+        }
+
+        button {
+            user-select: none;
+        }
+
+        .przelaczniki {
+            display: inline-flex;
+        }
+
+        .pasekprzyciski {
+            display: flex;
+        }
+
+        .pasekprzycisk {
+            background-color: #226ec5;
+            border: 1px solid #245ea0;
+            height: 40px;
+            width: 200px;
+            border-radius: 4px;
+            margin-left: 5px;
+            display: flex;
+            align-items: center;
+            padding-left: 5px;
+            font-size: 16px;
+            transition: all 0.1s;
+        }
+
+        .pasekprzycisk:hover {
+            background-color: #3973b6;
+        }
+
+        .pasekprzycisk:active {
+            background-color: #316cb1;
+            transform: scale(0.98);
+        }
+
+        .pasekprzyciskactive {
+            background-color: #1e5799;
+            font-size: 17px;
+            text-shadow: 2px 2px 5px #111111;
+        }
+
+        .active {
+            z-index: 999;
+        }
+    </style>
+
+    <script>
+        var zindex = 1;
+
+        $(function () {
+            $(".okno").draggable({ handle: ".pasek", cancel: ".button-pasek", scroll: false });
+        });
+
+        function closeModal(oknoId, min) {
+            const $przycisk = $("#oknoprzycisk" + oknoId);
+            var $blok = $("#okno" + oknoId);
+            $blok.css({
+                "opacity": "0%",
+                "transform": "scale(0.9) rotateX(20deg)",
+                "pointer-events": "none"
+            });
+            setTimeout(function () {
+                $blok.hide();
+            }, 200);
+            if (min != 1) {
+                $przycisk.css({
+                    "opacity": "0%",
+                    "transform": "scale(0.9) rotateX(20deg)",
+                    "pointer-events": "none"
+                });
+                setTimeout(function () {
+                    $przycisk.hide();
+                }, 200);
+            }
+        }
+
+        function openModal(oknoId, przy) {
+            const $przycisk = $("#oknoprzycisk" + oknoId);
+            var $blok = $("#okno" + oknoId);
+            $przycisk.show();
+
+            var windowWidth = $(window).width();
+            var windowHeight = $(window).height();
+            var divWidth = $blok.outerWidth();
+            var divHeight = $blok.outerHeight();
+
+            var leftValue = (windowWidth - divWidth) / 2;
+            var topValue = (windowHeight - divHeight) / 2;
+
+            if (przy == 0) {
+                $blok.css({
+                    "left": leftValue,
+                    "top": topValue
+                });
+                $przycisk.show();
+                $przycisk.css({
+                    "display": "flex",
+                    "pointer-events": "auto"
+                });
+                setTimeout(function () {
+                    $przycisk.css({
+                        "opacity": "100%",
+                        "transform": "scale(1) rotateX(0deg)"
+                    });
+                }, 1);
+            }
+            $blok.css({
+                "display": "block",
+                "pointer-events": "auto"
+            });
+            setTimeout(function () {
+                $blok.css({
+                    "opacity": "100%",
+                    "transform": "scale(1) rotateX(0deg)"
+                });
             }, 1);
+
+            if($blok.attr("resizable")=="true") {
+                $(function () {
+                    $blok.resizable({
+                        minHeight: divHeight,
+                        minWidth: divWidth,
+                        handles: "n, e, s, w, ne, se, sw, nw",
+                        autoHide: true
+                    });
+                })
+            }
+            $("#okno" + oknoId).css("z-index", zindex);
+        }
+
+        function toggleModal(oknoId, callback) {
+            const $przycisk = $("#oknoprzycisk" + oknoId);
+            $przycisk.toggleClass("pasekprzyciskactive");
+
+            if (callback) {
+                $przycisk.attr("onclick", callback);
+            }
+        }
+
+        function przywrocModal(oknoId) {
+            openModal(oknoId, 1);
+            toggleModal(oknoId, "minimalizujModal(" + oknoId + ")");
+        }
+
+        function minimalizujModal(oknoId) {
+            closeModal(oknoId, 1);
+            toggleModal(oknoId, "przywrocModal(" + oknoId + ")");
+        }
+
+        $(document).ready(function () {
+            $(document).on('contextmenu', function (e) {
+                e.preventDefault();
+            });
+            openModal(1, 0);
+        });
+
+        function lightMode() {
+            $('body').toggleClass('light');
+            showNotification();
+        }
+
+        function showNotification() {
+            var notification = $("#powiadomienie");
+            notification.slideDown().delay(2000).slideUp();
+        }
+
+        function fokus(oknoId) {
+            zindex += 1;
+            if(oknoId!=0) {
+                $("#okno" + oknoId).css("z-index", zindex);
+            }
+            else {
+                $(".pasekzadan").css("z-index", zindex);
+            }
         }
     </script>
 </head>
 
-<body class="light">
-    <div id="okno" class="okno">
+<body class="">
+    <div class="pasekzadan" onmousedown="fokus(0)">
+        <div class="pasekprzyciski">
+            <div class="pasekprzycisk pasekprzyciskactive" id="oknoprzycisk1" onclick="minimalizujModal(1)">
+                🛑 Wystąpił błąd
+            </div>
+            <div class="pasekprzycisk" id="oknoprzycisk2" onclick="przywrocModal(2)">
+                ⚙️ Ustawienia
+            </div>
+        </div>
+        <div class="zegar">
+            <span id="godzina"></span>
+            <span id="data"></span>
+        </div>
+    </div>
+
+    <div id="okno1" class="okno resizable" onmousedown="fokus(1)"
+        style="opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;">
         <div class="pasek">
-            Wystąpił błąd
-            <div class="close" title="Zamnkij" onclick="closeModal()">
-                ⨉
+            🛑 Wystąpił błąd
+            <div class="przelaczniki">
+                <div class="button-pasek minimalizuj" title="Minimalizuj" onclick="minimalizujModal(1)">
+                    _
+                </div>
+                <div class="button-pasek close" title="Zamnkij" onclick="closeModal(1, 0)">
+                    ⨉
+                </div>
             </div>
         </div>
         <div class="content">
@@ -199,19 +423,72 @@
             Wystąpił błąd 0x0291823. Skontaktuj się z administratorem systemu.
         </div>
         <div class="przyciski">
-            <div class="przycisk" onclick="closeModal()">
+            <div class="przycisk" onclick="closeModal(1)">
                 OK
             </div>
         </div>
     </div>
-    <div style="display: flex; position: absolute; left: 10px; top: 10px;">
-        <button style="color: black; margin-right: 5px;" onclick="openModal()">otworz pierdolone okno</button>
+    <div id="okno2" class="okno" resizable="true" onmousedown="fokus(2)"
+        style="opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;">
+        <div class="pasek">
+            ⚙️ Ustawienia
+            <div class="przelaczniki">
+                <div class="button-pasek minimalizuj" title="Minimalizuj" onclick="minimalizujModal(2)">
+                    _
+                </div>
+                <div class="button-pasek close" title="Zamnkij" onclick="closeModal(2, 0)">
+                    ⨉
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <span class="ikona">⚙️</span>
+            W tym miejscu mogą pojawić się ustawienia..
+        </div>
+    </div>
+
+    <div style="display: flex; position: absolute; left: 10px; bottom: 10px;">
+        <button style="color: black; margin-right: 5px;" onclick="openModal(1, 0)">otworz pierdolone okno nr 1</button>
+        <button style="color: black; margin-right: 5px;" onclick="openModal(2, 0)">otworz pierdolone okno nr 2</button>
         <button style="color: black;" onclick="lightMode()">przełącz na dark mode / light mode</button>
     </div>
+
+    <div id="powiadomienie" class="powiadomienie">
+        Tryb jasny/ciemny został zmieniony!
+    </div>
+
     <script>
-        function lightMode() {
-            document.body.classList.toggle("light");
+        async function aktualizujDateGodzine() {
+            var teraz = new Date();
+
+            var godzina = teraz.getHours();
+            godzina = (godzina < 10 ? "0" : "") + godzina;
+
+            var minuta = teraz.getMinutes();
+            minuta = (minuta < 10 ? "0" : "") + minuta;
+
+            var sekunda = teraz.getSeconds();
+            sekunda = (sekunda < 10 ? "0" : "") + sekunda;
+
+            var dzien = teraz.getDate();
+            dzien = (dzien < 10 ? "0" : "") + dzien;
+
+            var miesiac = teraz.getMonth() + 1;
+            miesiac = (miesiac < 10 ? "0" : "") + miesiac;
+
+            var rok = teraz.getFullYear();
+
+            var godzinaElement = $("#godzina");
+            var dataElement = $("#data");
+
+            godzinaElement.text(godzina + ":" + minuta + ":" + sekunda);
+            dataElement.text(dzien + "." + miesiac + "." + rok);
         }
+
+        setInterval(aktualizujDateGodzine, 1000);
+        $(document).ready(function () {
+            aktualizujDateGodzine();
+        });
     </script>
 </body>
 

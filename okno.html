@@ -265,23 +265,35 @@
             $(".okno").draggable({ handle: ".pasek", cancel: ".button-pasek", scroll: false });
         });
 
+        function clickDisable(name) {
+            $(name).css({
+                "pointer-events": "none"
+            });
+        }
+
+        function clickEnable(name) {
+            $(name).css({
+                "pointer-events": "auto"
+            });
+        }
+
         function closeModal(oknoId, min) {
             const $przycisk = $("#oknoprzycisk" + oknoId);
             var $blok = $("#okno" + oknoId);
             $blok.css({
                 "opacity": "0%",
-                "transform": "scale(0.9) rotateX(20deg)",
-                "pointer-events": "none"
+                "transform": "scale(0.9) rotateX(20deg)"
             });
+            clickDisable($blok);
             setTimeout(function () {
                 $blok.hide();
             }, 200);
             if (min != 1) {
                 $przycisk.css({
                     "opacity": "0%",
-                    "transform": "scale(0.9) rotateX(20deg)",
-                    "pointer-events": "none"
+                    "transform": "scale(0.9) rotateX(20deg)"
                 });
+                clickDisable($przycisk);
                 setTimeout(function () {
                     $przycisk.hide();
                 }, 200);
@@ -308,9 +320,9 @@
                 });
                 $przycisk.show();
                 $przycisk.css({
-                    "display": "flex",
-                    "pointer-events": "auto"
+                    "display": "flex"
                 });
+                clickEnable($przycisk);
                 setTimeout(function () {
                     $przycisk.css({
                         "opacity": "100%",
@@ -319,9 +331,9 @@
                 }, 1);
             }
             $blok.css({
-                "display": "block",
-                "pointer-events": "auto"
+                "display": "block"
             });
+            clickEnable($blok);
             setTimeout(function () {
                 $blok.css({
                     "opacity": "100%",
@@ -352,28 +364,33 @@
         }
 
         function przywrocModal(oknoId) {
+            const $przycisk = $("#oknoprzycisk" + oknoId);
             var $blok = $("#okno" + oknoId);
+
+            clickDisable($przycisk);
             $blok.animate({
                 left: oknoXpos[oknoId],
                 top: oknoYpos[oknoId]
             }, 200);
             $blok.css({
-                "display": "block",
-                "pointer-events": "auto"
+                "display": "block"
             });
+            clickEnable($blok);
             setTimeout(function () {
                 $blok.css({
                     "opacity": "100%",
                     "transform": "scale(1) rotateX(0deg)"
                 });
             }, 1);
-
+            setTimeout(clickEnable($przycisk), 500);
             toggleModal(oknoId, "minimalizujModal(" + oknoId + ")");
         }
 
         function minimalizujModal(oknoId) {
             const $przycisk = $("#oknoprzycisk" + oknoId);
             var $blok = $("#okno" + oknoId);
+
+            clickDisable($przycisk);
 
             oknoXpos[oknoId] = $blok.position().left;
             oknoYpos[oknoId] = $blok.position().top;
@@ -384,13 +401,14 @@
             }, 200);
             $blok.css({
                 "opacity": "0%",
-                "transform": "scale(0.5)",
-                "pointer-events": "none"
+                "transform": "scale(0.5)"
             });
+            clickDisable($blok);
             setTimeout(function () {
                 $blok.hide();
             }, 200);
             toggleModal(oknoId, "przywrocModal(" + oknoId + ")");
+            setTimeout(clickEnable($przycisk), 500);
         }
 
         $(document).ready(function () {

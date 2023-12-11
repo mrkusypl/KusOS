@@ -367,6 +367,7 @@
                     "transform": "scale(1) rotateX(0deg)"
                 });
             }, 1);
+
             toggleModal(oknoId, "minimalizujModal(" + oknoId + ")");
         }
 
@@ -383,7 +384,8 @@
             }, 200);
             $blok.css({
                 "opacity": "0%",
-                "transform": "scale(0.5)"
+                "transform": "scale(0.5)",
+                "pointer-events": "none"
             });
             setTimeout(function () {
                 $blok.hide();

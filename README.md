@@ -1,1 +1,1 @@
-https://mrkusypl.github.io/kusOS_demo/okno.html
+https://mrkusypl.github.io/KusOS/okno.html

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Demo - okno dialogowe</title>
+    <title>KusOS - wersja demonstracyjna</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
         integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
@@ -38,7 +38,8 @@
             align-items: center;
         }
 
-        .okno {
+        .okno,
+        #context-menu {
             min-width: 400px;
             height: max-content;
             width: max-content;
@@ -53,9 +54,72 @@
             position: absolute;
         }
 
-        .light .okno {
+        .light .okno,
+        .light #context-menu {
             background-color: #eeeeee;
             color: #111111;
+        }
+
+        .przyciskMenu,
+        .light #context-menu .przyciskMenu {
+            width: 100%;
+            height: 30px;
+            border: 1px solid rgb(78, 78, 78);
+            background-color: rgb(102, 102, 102);
+            margin-bottom: 5px;
+        }
+
+        .przyciskMenu:hover,
+        .light #context-menu .przyciskMenu:hover {
+            transition: background-color 0.1s;
+            background-color: rgb(62, 73, 226);
+            color: #eeeeee;
+        }
+
+        .przyciskMenu:active,
+        .light #context-menu .przyciskMenu:active {
+            transition: background-color 0.05s;
+            background-color: rgb(60, 68, 170);
+            transform: scale(0.98);
+        }
+
+        .przyciskMenu {
+            background-color: #494949;
+            backdrop-filter: blur(10px);
+            border-radius: 4px;
+            padding-left: 5px;
+            display: flex;
+            align-items: center;
+            color: #eeeeee;
+            font-size: 16px;
+        }
+
+        .light #context-menu .przyciskMenu {
+            background-color: rgb(212, 212, 212);
+            color: #111111;
+        }
+
+        .button-pasek,
+        .przycisk,
+        .light .okno .przyciski .przycisk {
+            width: 32px;
+            border-radius: 5px;
+            text-align: center;
+            float: right;
+            justify-content: center;
+            margin-left: 2px;
+            margin-right: 2px;
+            color: #DFDFDF;
+            display: flex;
+            align-items: center;
+            height: 32px;
+            text-shadow: 1px 1px 3px #111111;
+        }
+
+        .light .okno .przyciski .przycisk {
+            background-color: rgb(212, 212, 212);
+            color: #111111;
+            font-size: 15px;
         }
 
         .oknoActive {
@@ -186,12 +250,19 @@
             align-items: center;
         }
 
-        .przyciski {
+        .przyciski,
+        #context-menu {
             display: flex;
             justify-content: center;
             width: auto;
             height: 40px;
             margin-bottom: 10px;
+        }
+
+        #context-menu {
+            flex-direction: column;
+            height: auto;
+            padding: 5px 10px 5px 5px;
         }
 
         .ikona {
@@ -210,6 +281,11 @@
             margin-bottom: 10px;
             border-radius: 5px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.438);
+        }
+
+        .light .powiadomienie {
+            background-color: #eeeeee;
+            color: #3d3d3d;
         }
 
         .pasekzadan {
@@ -285,6 +361,15 @@
             width: 100%;
             height: 100%;
         }
+
+        .wersja  {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            margin: 5px;
+            user-select: none;
+            text-align: right;
+        }
     </style>
 
     <script>
@@ -311,11 +396,15 @@
             oknoIlosc--;
             $blok.css({
                 "opacity": "0%",
-                "transform": "scale(0.9) rotateX(20deg)"
+                "transform": "scale(0.9) rotateX(20deg)",
             });
             setClickState($blok, false);
             setTimeout(function () {
                 $blok.hide();
+                $blok.css({
+                "width": "",
+                "height": ""
+            });
             }, dlugoscAnimacji);
             if (min != 1) {
                 $przycisk.css({
@@ -333,10 +422,19 @@
             const $przycisk = $("#oknoprzycisk" + oknoId);
             var $blok = $("#okno" + oknoId);
 
+            setTimeout(function () {
+                        $("#context-menu").css({
+                            "opacity": "0%"
+                        });
+                    }, 1);
+
+                    $("#context-menu").hide();
+
             oknoIlosc++;
             $przycisk.css({
                 "order": oknoIlosc++
             });
+            $przycisk.addClass("pasekprzyciskOnScreen");
 
             $przycisk.show();
 
@@ -354,9 +452,6 @@
                     "top": topValue
                 });
                 $przycisk.show();
-                $przycisk.css({
-                    "display": "flex"
-                });
                 setClickState($przycisk, true);
                 setTimeout(function () {
                     $przycisk.css({
@@ -365,9 +460,7 @@
                     });
                 }, 1);
             }
-            $blok.css({
-                "display": "block"
-            });
+            $blok.show();
             setClickState($blok, true);
             fokus(oknoId);
             setTimeout(function () {
@@ -407,9 +500,7 @@
                 left: oknoXpos[oknoId],
                 top: oknoYpos[oknoId]
             }, dlugoscAnimacji);
-            $blok.css({
-                "display": "block"
-            });
+            $blok.show();
             setClickState($blok, true);
             setTimeout(function () {
                 $blok.css({
@@ -512,6 +603,42 @@
                 $(".pasekzadan").css("z-index", zindex);
             }
         }
+
+        $(document).ready(function () {
+            // Pokazuje menu kontekstowe po prawym przycisku myszy
+            $(".pulpit").on("contextmenu", function (event) {
+                event.preventDefault();
+
+                var posX = event.pageX;
+                var posY = event.pageY;
+
+                $("#context-menu").show();
+                $("#context-menu").css({
+                    "left": posX + "px",
+                    "top": posY + "px",
+                });
+
+                setTimeout(function () {
+                    $("#context-menu").css({
+                        "opacity": "100%"
+                    });
+                }, 1);
+            });
+
+            // Chowa menu kontekstowe po kliknięciu poza nim
+            $(document).on("click", function (event) {
+                if (!$(event.target).closest("#context-menu").length) {
+                    setTimeout(function () {
+                        $("#context-menu").css({
+                            "opacity": "0%"
+                        });
+                    }, 1);
+
+                    $("#context-menu").hide();
+                }
+            });
+        });
+
     </script>
 </head>
 
@@ -522,7 +649,9 @@
                 onclick="minimalizujPrzycisk(1)">
                 🛑 Wystąpił błąd
             </div>
-            <div class="pasekprzycisk" id="oknoprzycisk2" style="order: 2; pointer-events: none; opacity: 0; transform: scale(0.9) rotateX(20deg); display: none;" onclick="przywrocPrzycisk(2)">
+            <div class="pasekprzycisk" id="oknoprzycisk2"
+                style="order: 2; pointer-events: none; opacity: 0; transform: scale(0.9) rotateX(20deg); display: none;"
+                onclick="przywrocPrzycisk(2)">
                 ⚙️ Ustawienia
             </div>
         </div>
@@ -533,10 +662,18 @@
     </div>
 
     <div class="pulpit" onmousedown="fokus(-1)">
-        sss
+        <div class="wersja">
+            KusOS | Build 20231212_v0.23<br />
+        </div>
     </div>
 
-    <div id="okno1" class="okno resizable" onmousedown="fokus(1)" resizable="true"
+    <div id="context-menu">
+        <div class="przyciskMenu" onclick="openModal(1, 0)">🛑 Otwórz okno "Wystąpił błąd"</div>
+        <div class="przyciskMenu" onclick="openModal(2, 0)">⚙️ Otwórz okno "Ustawienia"</div>
+        <div class="przyciskMenu" onclick="lightMode()">🖌️ Przełącz tryb jasny/ciemny</div>
+    </div>
+
+    <div id="okno1" class="okno resizable" onmousedown="fokus(1)"
         style="opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;">
         <div class="pasek">
             🛑 Wystąpił błąd
@@ -560,7 +697,7 @@
         </div>
     </div>
     <div id="okno2" class="okno" resizable="true" onmousedown="fokus(2)"
-        style="opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;">
+        style="pointer-events: none; opacity: 0; transform: scale(0.9) rotateX(20deg); display: none;">
         <div class="pasek">
             ⚙️ Ustawienia
             <div class="przelaczniki">
@@ -576,12 +713,6 @@
             <span class="ikona">⚙️</span>
             W tym miejscu mogą pojawić się ustawienia..
         </div>
-    </div>
-
-    <div style="display: flex; position: absolute; left: 10px; bottom: 10px;">
-        <button style="color: black; margin-right: 5px;" onclick="openModal(1, 0)">otworz okno nr 1</button>
-        <button style="color: black; margin-right: 5px;" onclick="openModal(2, 0)">otworz okno nr 2</button>
-        <button style="color: black;" onclick="lightMode()">przełącz na dark mode / light mode</button>
     </div>
 
     <div id="powiadomienie" class="powiadomienie">

@@ -15,13 +15,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"
         integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css"
+        integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"
         integrity="sha512-0bEtK0USNd96MnO4XhH8jhv3nyRF0eK87pJke6pkYf3cM0uDIhNJy9ltuzqgypoIFXw3JSuiy04tVk4AjpZdZw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <style>
         body {
-            display: body;
             position: absolute;
             background: url(./wallpaper.jpg) bottom;
             color: #eeeeee;
@@ -217,6 +219,7 @@
             left: 0px;
             top: 0px;
             background-color: #1b6ac5;
+            backdrop-filter: blur(10px);
             width: 100%;
             height: 50px;
             user-select: none;
@@ -244,6 +247,7 @@
 
         .pasekprzycisk {
             background-color: #226ec5;
+            backdrop-filter: blur(10px);
             border: 1px solid #245ea0;
             height: 40px;
             width: 200px;
@@ -265,14 +269,21 @@
             transform: scale(0.98);
         }
 
-        .pasekprzyciskactive {
+        .pasekprzyciskOnScreen {
             background-color: #1e5799;
             font-size: 17px;
             text-shadow: 2px 2px 5px #111111;
         }
 
-        .active {
-            z-index: 999;
+        .pasekprzyciskActive {
+            background-color: #0e3d72;
+            border-color: #cde4ff62;
+        }
+
+        .pulpit {
+            display: flex;
+            width: 100%;
+            height: 100%;
         }
     </style>
 
@@ -321,7 +332,7 @@
         function openModal(oknoId, przy) {
             const $przycisk = $("#oknoprzycisk" + oknoId);
             var $blok = $("#okno" + oknoId);
-            
+
             oknoIlosc++;
             $przycisk.css({
                 "order": oknoIlosc++
@@ -367,21 +378,19 @@
             }, 1);
 
             if ($blok.attr("resizable") == "true") {
-                $(function () {
-                    $blok.resizable({
-                        minHeight: divHeight,
-                        minWidth: divWidth,
-                        handles: "n, e, s, w, ne, se, sw, nw",
-                        autoHide: true
-                    });
-                })
+                $blok.resizable({
+                    minHeight: divHeight,
+                    minWidth: divWidth,
+                    handles: "n, e, s, w, ne, se, sw, nw",
+                    autoHide: true
+                });
             }
             $("#okno" + oknoId).css("z-index", zindex);
         }
 
         function toggleModal(oknoId, callback) {
             const $przycisk = $("#oknoprzycisk" + oknoId);
-            $przycisk.toggleClass("pasekprzyciskactive");
+            $przycisk.toggleClass("pasekprzyciskOnScreen");
 
             if (callback) {
                 $przycisk.attr("onclick", callback);
@@ -432,6 +441,7 @@
                 "opacity": "0%",
                 "transform": "scale(0.5)"
             });
+            $(".pasekprzycisk").removeClass("pasekprzyciskActive");
             setClickState($blok, false);
             setTimeout(function () {
                 $blok.hide();
@@ -444,16 +454,20 @@
         }
 
         function minimalizujPrzycisk(oknoId) {
+            const $przycisk = $("#oknoprzycisk" + oknoId);
             var $blok = $("#okno" + oknoId);
 
-            if($blok.css("z-index") == zindex - 1) {
+            if ($blok.css("z-index") == zindex - 1) {
                 minimalizujModal(oknoId);
-                $przycisk.toggleClass("pasekprzyciskactive");
+                $przycisk.toggleClass("pasekprzyciskOnScreen");
                 toggleModal(oknoId, "przywrocPrzycisk(" + oknoId + ")");
                 fokus(oknoId);
+                $(".pasekprzycisk").removeClass("pasekprzyciskActive");
             }
             else {
                 fokus(oknoId);
+                $(".pasekprzycisk").removeClass("pasekprzyciskActive");
+                $("#oknoprzycisk" + oknoId).addClass("pasekprzyciskActive");
             }
         }
 
@@ -462,7 +476,7 @@
             var $blok = $("#okno" + oknoId);
 
             przywrocModal(oknoId);
-            $przycisk.toggleClass("pasekprzyciskactive");
+            $przycisk.toggleClass("pasekprzyciskOnScreen");
             toggleModal(oknoId, "minimalizujPrzycisk(" + oknoId + ")");
         }
 
@@ -487,12 +501,14 @@
             zindex += 1;
             $(".pasek").addClass("pasekBlur");
             $(".okno").removeClass("oknoActive");
+            $(".pasekprzycisk").removeClass("pasekprzyciskActive");
             if (oknoId != 0) {
                 $("#okno" + oknoId).css("z-index", zindex);
-                $("#okno" + oknoId +" .pasek").removeClass("pasekBlur");
+                $("#okno" + oknoId + " .pasek").removeClass("pasekBlur");
                 $("#okno" + oknoId).addClass("oknoActive");
+                $("#oknoprzycisk" + oknoId).addClass("pasekprzyciskActive");
             }
-            else {
+            else if (oknoId != -1) {
                 $(".pasekzadan").css("z-index", zindex);
             }
         }
@@ -502,10 +518,11 @@
 <body class="">
     <div class="pasekzadan" onmousedown="fokus(0)">
         <div class="pasekprzyciski">
-            <div class="pasekprzycisk pasekprzyciskactive" id="oknoprzycisk1" style="order: 1;" onclick="minimalizujPrzycisk(1)">
+            <div class="pasekprzycisk pasekprzyciskOnScreen" id="oknoprzycisk1" style="order: 1;"
+                onclick="minimalizujPrzycisk(1)">
                 🛑 Wystąpił błąd
             </div>
-            <div class="pasekprzycisk" id="oknoprzycisk2" style="order: 2;" onclick="przywrocPrzycisk(2)">
+            <div class="pasekprzycisk" id="oknoprzycisk2" style="order: 2; pointer-events: none; opacity: 0; transform: scale(0.9) rotateX(20deg); display: none;" onclick="przywrocPrzycisk(2)">
                 ⚙️ Ustawienia
             </div>
         </div>
@@ -515,7 +532,11 @@
         </div>
     </div>
 
-    <div id="okno1" class="okno resizable" onmousedown="fokus(1)"
+    <div class="pulpit" onmousedown="fokus(-1)">
+        sss
+    </div>
+
+    <div id="okno1" class="okno resizable" onmousedown="fokus(1)" resizable="true"
         style="opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;">
         <div class="pasek">
             🛑 Wystąpił błąd

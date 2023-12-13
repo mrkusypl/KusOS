@@ -1,0 +1,371 @@
+.okno,
+.context-menu {
+    min-width: 400px;
+    height: max-content;
+    width: max-content;
+    background-color: #3d3d3d;
+    border-radius: 5px;
+    user-select: none;
+    border: 1px solid #00000000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.438);
+    margin: 0;
+    transition: opacity 200ms, transform 300ms;
+    z-index: 1000;
+    position: absolute;
+}
+
+.light .okno,
+.light .context-menu {
+    background-color: #eeeeee;
+    color: #111111;
+}
+
+.light .context-menu .przyciskMenu {
+    background-color: rgb(212, 212, 212);
+    color: #111111;
+}
+
+.przyciskMenu,
+.light .context-menu .przyciskMenu {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    width: 100%;
+    height: 30px;
+    padding-left: 5px;
+    border: 1px solid rgb(71, 71, 71);
+    margin-bottom: 5px;
+    justify-content: space-between;
+}
+
+.przyciskMenu {
+    background-color: #424242;
+    border-radius: 4px;
+    color: #eeeeee;
+}
+
+.light .context-menu .przyciskMenu {
+    background-color: rgb(228, 228, 228);
+    border: 1px solid rgb(238, 238, 238);
+    color: #111111;
+}
+
+.przyciskMenu:hover,
+.light .context-menu .przyciskMenu:hover {
+    transition: background-color 0.1s;
+    background-color: rgb(54, 54, 54);
+    color: #eeeeee;
+}
+
+.light .context-menu .przyciskMenu:hover {
+    background-color: rgb(197, 197, 197);
+    color: #111111;
+}
+
+.przyciskMenu:active,
+.light .context-menu .przyciskMenu:active {
+    transition: background-color 0.05s;
+    background-color: rgb(43, 43, 43);
+}
+
+.light .context-menu .przyciskMenu:active {
+    background-color: rgb(167, 167, 167);
+    color: #111111;
+}
+
+.button-pasek,
+.przycisk,
+.light .okno .przyciski .przycisk {
+    width: 32px;
+    border-radius: 5px;
+    text-align: center;
+    float: right;
+    justify-content: center;
+    margin-left: 2px;
+    margin-right: 2px;
+    color: #DFDFDF;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    text-shadow: 1px 1px 3px #111111;
+}
+
+.light .okno .przyciski .przycisk {
+    background-color: rgb(212, 212, 212);
+    color: #111111;
+    font-size: 15px;
+}
+
+.oknoActive {
+    border: 1px solid #8a8a8a;
+}
+
+.light .oknoActive {
+    border: 1px solid #1b6ac5;
+}
+
+.light .okno .pasek {
+    background-color: #1b6ac5;
+    color: white;
+    border-bottom: 1px solid #397ece;
+    text-shadow: 1px 1px 3px #111111;
+}
+
+.light .okno .pasek .button-pasek {
+    box-shadow: 0 0 3px #111111;
+}
+
+.light .okno .pasek .close {
+    background-color: #ec2020;
+}
+
+.light .okno .pasek .minimalizuj {
+    background-color: #2061ec;
+}
+
+.pasek {
+    background-color: #333333;
+    border-radius: 5px 5px 0 0;
+    padding: 5px 5px 5px 10px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #464646;
+    font-weight: bold;
+    font-size: 17px;
+    display: inline-flex;
+    width: -webkit-fill-available;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pasekBlur {
+    background-color: #3d3d3d;
+}
+
+.light .okno .pasekBlur {
+    background-color: #478ddd;
+}
+
+.button-pasek,
+.przycisk,
+.light .okno .przyciski .przycisk {
+    width: 32px;
+    border-radius: 5px;
+    text-align: center;
+    float: right;
+    justify-content: center;
+    margin-left: 2px;
+    margin-right: 2px;
+    color: #DFDFDF;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    text-shadow: 1px 1px 3px #111111;
+}
+
+.przycisk,
+.light .okno .przyciski .przycisk {
+    width: 100px;
+    height: 30px;
+    border: 1px solid rgb(78, 78, 78);
+    background-color: rgb(102, 102, 102);
+    margin: 5px;
+}
+
+.light .okno .przyciski .przycisk {
+    background-color: rgb(212, 212, 212);
+    color: #111111;
+    font-size: 15px;
+}
+
+.przycisk:hover,
+.light .okno .przyciski .przycisk:hover {
+    transition: background-color 0.1s;
+    background-color: rgb(62, 73, 226);
+    color: #eeeeee;
+}
+
+.przycisk:active,
+.light .okno .przyciski .przycisk:active {
+    transition: background-color 0.05s;
+    background-color: rgb(60, 68, 170);
+    transform: scale(0.98);
+}
+
+.button-pasek:hover {
+    transition: background-color 0.2s;
+    color: #eeeeee;
+}
+
+.close:hover {
+    background-color: rgb(218, 40, 40);
+}
+
+.minimalizuj:hover {
+    background-color: rgb(40, 117, 218);
+}
+
+.button-pasek:active {
+    transition: background-color 0.05s;
+    color: #eeeeee;
+    transform: scale(0.98);
+}
+
+.close:active {
+    background-color: rgb(180, 34, 34);
+}
+
+.minimalizuj:active {
+    background-color: rgb(34, 73, 180);
+}
+
+.content {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.przyciski,
+.context-menu {
+    display: flex;
+    justify-content: center;
+    width: auto;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.context-menu {
+    flex-direction: column;
+    height: auto;
+    padding: 5px 10px 5px 5px;
+}
+
+.ikona {
+    font-size: 40px;
+}
+
+.powiadomienie {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.438);
+}
+
+.light .powiadomienie {
+    background-color: #eeeeee;
+    color: #3d3d3d;
+}
+
+.pasekzadan {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #1b6ac5;
+    backdrop-filter: blur(10px);
+    width: 100%;
+    height: 50px;
+    user-select: none;
+}
+
+.zegar {
+    display: grid;
+    justify-items: flex-end;
+    float: right;
+    position: absolute;
+    right: 20px;
+}
+
+button {
+    user-select: none;
+}
+
+.przelaczniki {
+    display: inline-flex;
+}
+
+.pasekprzyciski {
+    display: flex;
+}
+
+.pasekprzycisk {
+    background-color: #226ec5;
+    backdrop-filter: blur(10px);
+    border: 1px solid #245ea0;
+    height: 40px;
+    width: 200px;
+    border-radius: 4px;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+    font-size: 16px;
+    transition: all 0.1s;
+}
+
+.pasekprzycisk:hover {
+    background-color: #3973b6;
+}
+
+.pasekprzycisk:active {
+    background-color: #316cb1;
+    transform: scale(0.98);
+}
+
+.pasekprzyciskOnScreen {
+    background-color: #1e5799;
+    font-size: 17px;
+    text-shadow: 2px 2px 5px #111111;
+}
+
+.pasekprzyciskActive {
+    background-color: #0e3d72;
+    border-color: #cde4ff62;
+}
+
+.shortcut {
+    color: #a0a0a0;
+    float: right;
+    margin-right: 5px;
+}
+
+.pulpit {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.wersja {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 5px;
+    user-select: none;
+    text-align: right;
+}
+
+.wersja img {
+    width: 100px;
+    -webkit-user-drag: none;
+}
+
+.wersja img:hover {
+    transition: filter 200ms;
+    filter: contrast(0.5);
+    cursor: pointer;
+}
+
+.toggleOkna {
+    background-color: #3973b6;
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 10px;
+}

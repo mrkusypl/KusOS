@@ -1,0 +1,8 @@
+[
+    {
+        "tytul": "Wystapił błąd",
+        "ikona": "🛑",
+        "resizable": "false",
+        "content": "<div class='content'><span class='ikona'>🛑</span>Wystąpił błąd 0x0291823. Skontaktuj się z administratorem systemu.</div><div class='przyciski'><div id='OK' class='przycisk'>OK</div></div>"
+    }
+]

@@ -23,8 +23,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"
         integrity="sha512-0bEtK0USNd96MnO4XhH8jhv3nyRF0eK87pJke6pkYf3cM0uDIhNJy9ltuzqgypoIFXw3JSuiy04tVk4AjpZdZw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./ustawienia.js"></script>
-    <script src="./wystapilblad.js"></script>
 
     <style>
         body {
@@ -421,9 +419,18 @@
         var zindex = 1;
         var oknoXpos = [];
         var oknoYpos = [];
-        var oknoIlosc = 1;
 
         $(document).on('keydown', handleShortcuts);
+
+        function wolneId() {
+            var idWolne = 0;
+
+            do {
+                idWolne = idWolne + 1;
+            } while($("#okno" + idWolne).length === 1);
+
+            return idWolne;
+        }
 
         function setClickState(name, isEnabled) {
             const pointerEventsValue = isEnabled ? "auto" : "none";
@@ -434,7 +441,6 @@
             const $przycisk = $('[id^="oknoprzycisk' + oknoId + '"]');
             const $blok = $('[id^="okno' + oknoId + '"]');
             const $context = $('[id^="context-menuOkno' + oknoId + '"]');
-            oknoIlosc--;
             $przycisk.removeClass("pasekprzyciskOnScreen");
             $blok.css({
                 "opacity": "0%",
@@ -458,7 +464,7 @@
                     $przycisk.hide();
                 }, dlugoscAnimacji);
             }
-            setTimeout( function () {
+            setTimeout(function () {
                 $blok.remove();
                 $przycisk.remove();
                 $context.remove();
@@ -478,11 +484,46 @@
 
             else if (event.key === 'Escape') {
                 $(".context-menu").hide();
-                console.log($(".pasekprzyciskOnScreen").length);
             }
         }
 
+        function otworzOkno(nazwaJson) {
+            $("body").css("cursor", "wait");
+
+            async function wczytajDaneZJSON() {
+                try {
+                    const response = await fetch(nazwaJson);
+                    const dane = await response.json();
+                    return dane;
+                } catch (error) {
+                    oknoIlosc = wolneId();
+
+                    $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + oknoIlosc + ";'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>🛑 Wystąpił błąd</div>");
+                    $(".powiadomienie").before("<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;'><div class='pasek'>🛑 Wystąpił błąd<div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'>_</div><div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'>⨉</div></div></div><div class='content'><span class='ikona'>🛑</span>Wystąpił błąd podczas uruchamiania: " + error +"</div></div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div></div>");
+                    $(".powiadomienie").before("<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + M</div></div><div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>");
+                    openModal(oknoIlosc, 0);
+                }
+            }
+
+            function stworzOkno(dane) {
+                const { tytul, ikona, resizable, content } = dane;
+                oknoIlosc = wolneId();
+
+                $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + oknoIlosc + ";'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
+                $(".powiadomienie").before("<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'>" + ikona + " " + tytul + "<div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'>_</div><div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'>⨉</div></div></div>" + content + "</div>");
+                $(".powiadomienie").before("<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + M</div></div><div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>");
+                
+                $("#okno" + oknoIlosc + " .przyciski #OK").attr("onclick", "closeModal(" + oknoIlosc +")");
+                openModal(oknoIlosc, 0);
+            }
+
+            wczytajDaneZJSON().then((dane) => {
+                dane.forEach((okno) => stworzOkno(okno));
+            });
+        }
+
         function openModal(oknoId, przy) {
+
             const $przycisk = $('[id^="oknoprzycisk' + oknoId + '"]');
             const $context = $("#context-menuOkno" + oknoId);
             const $blok = $('[id^="okno' + oknoId + '"]');
@@ -564,6 +605,8 @@
             $(function () {
                 $(".okno").draggable({ handle: ".pasek", cancel: ".button-pasek", scroll: false });
             });
+
+            $("body").css("cursor", "auto");
         }
 
         function toggleModal(oknoId, callback) {
@@ -685,7 +728,7 @@
             $(document).on('contextmenu', function (e) {
                 e.preventDefault();
             });
-            wystapilblad();
+            otworzOkno("ustawienia.json");
         });
 
         function toggleOkna() {
@@ -780,13 +823,14 @@
         <div class="wersja">
             <a href="https://github.com/mrkusypl/KusOS" target="_blank"><img src="./kusOSlogo.png"
                     title="Przejdź na GitHub" alt="KusOS - logo" /></a><br />
-            KusOS | Build 20231213_v0.25<br />
+            KusOS | Build 20231213_v0.30<br />
         </div>
     </div>
 
     <div class="context-menu" id="context-menuPulpit">
-        <div class="przyciskMenu" onclick="wystapilblad()">🛑 Otwórz okno "Wystąpił błąd"</div>
-        <div class="przyciskMenu" onclick="ustawienia()">⚙️ Otwórz okno "Ustawienia"</div>
+        <div class="przyciskMenu" onclick="otworzOkno('wystapilblad.json')">🛑 Otwórz okno "Wystąpił błąd"</div>
+        <div class="przyciskMenu" onclick="otworzOkno('nieistniejacyplik.json')">🛑 Wywołaj błąd przy otwieraniu</div>
+        <div class="przyciskMenu" onclick="otworzOkno('ustawienia.json')">⚙️ Otwórz okno "Ustawienia"</div>
         <div class="przyciskMenu" onclick="lightMode()">🖌️ Przełącz tryb jasny/ciemny</div>
     </div>
 

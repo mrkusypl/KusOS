@@ -118,6 +118,7 @@ function otworzOkno(nazwaJson) {
         $(".powiadomienie").before("<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + M</div></div><div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>");
 
         $("#okno" + oknoIlosc + " .przyciski #OK").attr("onclick", "closeModal(" + oknoIlosc + ")");
+        $(".context-menu").hide();
         openModal(oknoIlosc, 0);
     }
 

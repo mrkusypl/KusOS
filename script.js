@@ -39,10 +39,16 @@ function closeModal(oknoId, min) {
         });
     }, dlugoscAnimacji);
     if (min != 1) {
-        $przycisk.css({
-            "opacity": "0%",
-            "transform": "scale(0.9) rotateX(20deg)"
-        });
+        setTimeout(function () {
+            $przycisk.css({
+                "opacity": "0%",
+                "transform": "scale(0.9) rotateX(20deg)"
+            });
+        }, 100);
+        $przycisk.empty();
+        $przycisk.animate({
+            "width": "0"
+        }, 200);
         setClickState($przycisk, false);
         setTimeout(function () {
             $przycisk.hide();
@@ -101,10 +107,10 @@ function otworzOkno(nazwaJson) {
                 });
             }
             else {
-                $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + oknoIlosc + ";'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>🛑 Wystąpił błąd</div>");
+                $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + zindex + "; transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>🛑 Wystąpił błąd</div>");
                 $(".powiadomienie").before("<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;'><div class='pasek'>🛑 Wystąpił błąd<div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'>_</div><div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'>⨉</div></div></div><div class='content'><span class='ikona'>🛑</span>Aplikacja " + nazwaJson + " nie może zostać uruchomiona. Upewnij się, że nazwa programu jest prawidłowa.</div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div></div>");
                 $(".powiadomienie").before("<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + M</div></div><div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>");
-                
+
                 $("#okno" + oknoIlosc + " .przyciski #OK").attr("onclick", "closeModal(" + oknoIlosc + ")");
                 $(".context-menu").hide();
                 openModal(oknoIlosc, 0);
@@ -116,7 +122,7 @@ function otworzOkno(nazwaJson) {
         const { tytul, ikona, resizable, content } = dane;
         oknoIlosc = wolneId();
 
-        $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + oknoIlosc + ";'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
+        $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + zindex + "; transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
         $(".powiadomienie").before("<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'>" + ikona + " " + tytul + "<div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'>_</div><div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'>⨉</div></div></div>" + content + "</div>");
         $(".powiadomienie").before("<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + M</div></div><div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>");
 
@@ -186,10 +192,19 @@ function openModal(oknoId, przy) {
         $(".pasek").on("contextmenu", function (event) {
             event.preventDefault();
 
+            var menuWidth = $context.outerWidth();
+            var menuHeight = $context.outerHeight();
+
             var posX = event.pageX;
             var posY = event.pageY;
 
-            $(".context-menu").hide();
+            if (posX + menuWidth > $(window).width()) {
+                posX -= menuWidth;
+            }
+
+            if (posY + menuHeight > $(window).height()) {
+                posY -= menuHeight;
+            }
 
             $context.show();
             $context.css({
@@ -387,8 +402,22 @@ $(document).ready(function () {
     $(".pulpit").on("contextmenu", function (event) {
         event.preventDefault();
 
+        var menu = $("#context-menuPulpit");
+        var menuWidth = menu.outerWidth();
+        var menuHeight = menu.outerHeight();
+
         var posX = event.pageX;
         var posY = event.pageY;
+
+        // Dostosuj pozycję X, aby kursor był w lewym lub prawym rogu menu
+        if (posX + menuWidth > $(window).width()) {
+            posX -= menuWidth;
+        }
+
+        // Dostosuj pozycję Y, aby kursor był w górnym lub dolnym rogu menu
+        if (posY + menuHeight > $(window).height()) {
+            posY -= menuHeight;
+        }
 
         setTimeout(function () {
             $(".context-menu").css({
@@ -398,14 +427,14 @@ $(document).ready(function () {
 
         $(".context-menu").hide();
 
-        $("#context-menuPulpit").show();
-        $("#context-menuPulpit").css({
+        menu.show();
+        menu.css({
             "left": posX + "px",
             "top": posY + "px",
         });
 
         setTimeout(function () {
-            $("#context-menuPulpit").css({
+            menu.css({
                 "opacity": "100%"
             });
         }, 1);

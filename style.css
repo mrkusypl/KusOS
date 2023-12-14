@@ -1,3 +1,11 @@
+body {
+    --kolor: #3d3d3d;
+}
+
+.light {
+    --kolor: #1b6ac5;
+}
+
 .okno,
 .context-menu {
     min-width: 400px;
@@ -9,7 +17,7 @@
     border: 1px solid #00000000;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.438);
     margin: 0;
-    transition: opacity 200ms, transform 300ms;
+    transition: opacity 200ms, transform 300ms, background-color 200ms;
     z-index: 1000;
     position: absolute;
 }
@@ -30,7 +38,6 @@
     display: flex;
     align-items: center;
     font-size: 16px;
-    width: 100%;
     height: 30px;
     padding-left: 5px;
     border: 1px solid rgb(71, 71, 71);
@@ -42,6 +49,10 @@
     background-color: #424242;
     border-radius: 4px;
     color: #eeeeee;
+}
+
+.przyciskMenu:last-child {
+    margin-bottom: 0;
 }
 
 .light .context-menu .przyciskMenu {
@@ -101,26 +112,15 @@
 }
 
 .light .oknoActive {
-    border: 1px solid #1b6ac5;
+    border: 1px solid var(--kolor);
 }
 
 .light .okno .pasek {
-    background-color: #1b6ac5;
+    background-color: var(--kolor);
     color: white;
-    border-bottom: 1px solid #397ece;
+    border-bottom: 1px solid #00000031;
     text-shadow: 1px 1px 3px #111111;
-}
-
-.light .okno .pasek .button-pasek {
-    box-shadow: 0 0 3px #111111;
-}
-
-.light .okno .pasek .close {
-    background-color: #ec2020;
-}
-
-.light .okno .pasek .minimalizuj {
-    background-color: #2061ec;
+    transition: all 200ms;
 }
 
 .pasek {
@@ -138,11 +138,7 @@
 }
 
 .pasekBlur {
-    background-color: #3d3d3d;
-}
-
-.light .okno .pasekBlur {
-    background-color: #478ddd;
+    background-color: #00000015 !important;
 }
 
 .button-pasek,
@@ -180,14 +176,14 @@
 .przycisk:hover,
 .light .okno .przyciski .przycisk:hover {
     transition: background-color 0.1s;
-    background-color: rgb(62, 73, 226);
+    background-color: var(--kolor);
     color: #eeeeee;
 }
 
 .przycisk:active,
 .light .okno .przyciski .przycisk:active {
     transition: background-color 0.05s;
-    background-color: rgb(60, 68, 170);
+    background-color: rgb(54, 54, 54);
     transform: scale(0.98);
 }
 
@@ -236,7 +232,7 @@
 .context-menu {
     flex-direction: column;
     height: auto;
-    padding: 5px 10px 5px 5px;
+    padding: 5px 5px 5px 5px;
 }
 
 .ikona {
@@ -250,7 +246,7 @@
     left: 50%;
     transform: translateX(-50%);
     background-color: #333;
-    color: #fff;
+    color: #eeeeee;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -263,16 +259,18 @@
 }
 
 .pasekzadan {
+    background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.10127801120448177) 100%);
     display: flex;
     align-items: center;
     position: absolute;
     left: 0;
     top: 0;
-    background-color: #1b6ac5;
+    background-color: var(--kolor);
     backdrop-filter: blur(10px);
     width: 100%;
     height: 50px;
     user-select: none;
+    transition: background-color 200ms;
 }
 
 .zegar {
@@ -296,9 +294,9 @@ button {
 }
 
 .pasekprzycisk {
-    background-color: #226ec5;
+    background-color: #ffffff0c;
     backdrop-filter: blur(10px);
-    border: 1px solid #245ea0;
+    border: 1px solid #ffffff25;
     height: 40px;
     width: 200px;
     border-radius: 4px;
@@ -308,25 +306,26 @@ button {
     padding-left: 5px;
     font-size: 16px;
     transition: all 0.1s;
+    position: sticky;
 }
 
 .pasekprzycisk:hover {
-    background-color: #3973b6;
+    background-color: #ffffff1e;
 }
 
 .pasekprzycisk:active {
-    background-color: #316cb1;
+    background-color: #00000013;
     transform: scale(0.98);
 }
 
 .pasekprzyciskOnScreen {
-    background-color: #1e5799;
+    background-color: #0000002a;
     font-size: 17px;
     text-shadow: 2px 2px 5px #111111;
 }
 
 .pasekprzyciskActive {
-    background-color: #0e3d72;
+    background-color: #00000054;
     border-color: #cde4ff62;
 }
 
@@ -363,9 +362,19 @@ button {
 }
 
 .toggleOkna {
-    background-color: #3973b6;
+    background-color: #ffffff23;
+    transition: all 200ms;
     position: absolute;
     right: 0;
     height: 100%;
     width: 10px;
+    border-left: 1px solid #eeeeee31;
+}
+
+.toggleOkna:hover {
+    background-color: #00000015;
+}
+
+.toggleOkna:active {
+    background-color: #00000033;
 }

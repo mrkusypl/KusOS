@@ -104,6 +104,9 @@ function otworzOkno(nazwaJson) {
                 $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + oknoIlosc + ";'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>🛑 Wystąpił błąd</div>");
                 $(".powiadomienie").before("<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;'><div class='pasek'>🛑 Wystąpił błąd<div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'>_</div><div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'>⨉</div></div></div><div class='content'><span class='ikona'>🛑</span>Aplikacja " + nazwaJson + " nie może zostać uruchomiona. Upewnij się, że nazwa programu jest prawidłowa.</div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div></div>");
                 $(".powiadomienie").before("<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + M</div></div><div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>");
+                
+                $("#okno" + oknoIlosc + " .przyciski #OK").attr("onclick", "closeModal(" + oknoIlosc + ")");
+                $(".context-menu").hide();
                 openModal(oknoIlosc, 0);
             }
         }

@@ -3,6 +3,8 @@ const dlugoscAnimacji = 250;
 var zindex = 1;
 var oknoXpos = [];
 var oknoYpos = [];
+var oknoHeight = [];
+var oknoWidth = [];
 
 $(document).on('keydown', handleShortcuts);
 
@@ -123,7 +125,7 @@ function otworzOkno(nazwaJson) {
         oknoIlosc = wolneId();
 
         $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + zindex + "; transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
-        $(".powiadomienie").before("<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'>_</div><div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'>⨉</div></div></div>" + content + "</div>");
+        $(".powiadomienie").before("<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'>_</div><div class='button-pasek maksymalizuj' title='Maksymalizuj' onclick='maksymalizujModal(" + oknoIlosc + ")'>🗖</div><div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'>⨉</div></div></div>" + content + "</div>");
         $(".powiadomienie").before("<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + M</div></div><div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>");
 
         $("#okno" + oknoIlosc + " .przyciski #OK").attr("onclick", "closeModal(" + oknoIlosc + ")");
@@ -222,6 +224,10 @@ function openModal(oknoId, przy) {
         $(".przyciskMenu").on("click", function (event) {
             $(".context-menu").hide();
         })
+
+        $("#okno" + oknoId + " .pasek").on("dblclick", function () {
+            maksymalizujModal(oknoId);
+        });
     });
 
     $(function () {
@@ -318,6 +324,38 @@ function minimalizujOkno(oknoId) {
     setTimeout(function () {
         setClickState($przycisk, true);
     }, dlugoscAnimacji);
+}
+
+function maksymalizujModal(oknoId) {
+    var $blok = $('[id^="okno' + oknoId + '"]');
+    oknoXpos[oknoId] = $blok.position().left;
+    oknoYpos[oknoId] = $blok.position().top;
+    oknoHeight[oknoId] = $blok.width();
+    oknoWidth[oknoId] = $blok.height();
+
+    $blok.animate({
+        left: 0,
+        top: "50px",
+        width: "100%",
+        height: screen.height - 50
+    }, 50);
+
+    $("#okno" + oknoId + " .pasek").css({
+        "border-radius": "0"
+    });
+    $blok.css({
+        "border-radius": "0"
+    });
+    
+    toggleModal(oknoId, "przywrocPrzycisk(" + oknoId + ")");
+    $blok.draggable("disable");
+    $blok.resizable("disable");
+
+    $("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick", "przywrocNormalModal(" + oknoId +");")
+}
+
+function przywrocNormalModal(oknoId) {
+    console.log("jebac kurwy");
 }
 
 function minimalizujPrzycisk(oknoId) {

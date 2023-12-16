@@ -65,12 +65,28 @@ function closeModal(oknoId, min) {
 
 function handleShortcuts(event) {
     if (event.shiftKey && event.key === 'F4') {
-        closeModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)), 0);
-        $(".context-menu").hide();
+        if (typeof ($(".oknoActive").prop("id")) != "undefined") {
+            closeModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)), 0);
+            $(".context-menu").hide();
+        }
+    }
+
+    else if (event.shiftKey && event.key === 'ArrowDown') {
+        if (typeof ($(".oknoActive").prop("id")) != "undefined") {
+            minimalizujModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)));
+            $(".context-menu").hide();
+        }
+    }
+
+    else if (event.shiftKey && event.key === 'ArrowUp') {
+        if (typeof ($(".oknoActive").prop("id")) != "undefined") {
+            maksymalizujModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)));
+            $(".context-menu").hide();
+        }
     }
 
     else if (event.shiftKey && event.key === 'M') {
-        minimalizujModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)));
+        toggleModal();
         $(".context-menu").hide();
     }
 
@@ -109,24 +125,38 @@ function otworzOkno(nazwaJson) {
                 });
             }
             else {
-                $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + zindex + "; transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>🛑 Wystąpił błąd</div>");
-                $(".powiadomienie").before("<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>🛑</div> Wystąpił błąd</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'>_</div><div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'>⨉</div></div></div><div class='content'><span class='ikona'>🛑</span>Aplikacja " + nazwaJson + " nie może zostać uruchomiona. Upewnij się, że nazwa programu jest prawidłowa.</div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div></div>");
-                $(".powiadomienie").before("<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + M</div></div><div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>");
-
-                $("#okno" + oknoIlosc + " .przyciski #OK").attr("onclick", "closeModal(" + oknoIlosc + ")");
-                $(".context-menu").hide();
-                openModal(oknoIlosc, 0);
+                const dane = [{
+                    "tytul": "Wystąpił błąd",
+                    "ikona": "🛑",
+                    "resizable": "false",
+                    "maximize": "false",
+                    "content": "<div class='content'><span class='ikona'>🛑</span>Aplikacja " + nazwaJson + " nie może zostać uruchomiona. Upewnij się, że nazwa programu jest prawidłowa.</div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
+                }];
+                
+                return dane;
             }
         }
     }
 
     function stworzOkno(dane) {
-        const { tytul, ikona, resizable, content } = dane;
+        const { tytul, ikona, resizable, maximize, content } = dane;
         oknoIlosc = wolneId();
 
         $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + zindex + "; transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
-        $(".powiadomienie").before("<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'>_</div><div class='button-pasek maksymalizuj' title='Maksymalizuj' onclick='maksymalizujModal(" + oknoIlosc + ")'>🗖</div><div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'>⨉</div></div></div>" + content + "</div>");
-        $(".powiadomienie").before("<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + M</div></div><div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>");
+
+        var textDane = "<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><line x1='3' x2='21' y1='21' y2='21'/></svg></div>";
+        if (maximize === "true") {
+            textDane += "<div class='button-pasek maksymalizuj' title='Maksymalizuj' onclick='maksymalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><rect height='18' rx='2' ry='2' width='18' x='3' y='3'/></svg></div>";
+        }
+        textDane += "<div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><line x1='22' x2='2' y1='3' y2='21'/><line x1='2' x2='22' y1='3' y2='21'/></svg></div></div></div>" + content + "</div>";
+
+        textDane += "<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + 🡇</div></div>";
+        if (maximize === "true") {
+            textDane += "<div class='przyciskMenu maksymalizujMenu' onclick='maksymalizujModal(" + oknoIlosc + ")'><div class='maksymalizujTekst'>Maksymalizuj</div><div class='shortcut'>Shift + 🡅</div></div>";
+        }
+
+        textDane += "<div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>";
+        $(".powiadomienie").before(textDane);
 
         $("#okno" + oknoIlosc + " .przyciski #OK").attr("onclick", "closeModal(" + oknoIlosc + ")");
         $(".context-menu").hide();
@@ -136,6 +166,17 @@ function otworzOkno(nazwaJson) {
     wczytajDaneZJSON().then((dane) => {
         dane.forEach((okno) => stworzOkno(okno));
     });
+}
+
+function dblclickPasek(oknoId) {
+    if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").length != 0) {
+        if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick").substr(0, 4) === 'maks') {
+            maksymalizujModal(oknoId);
+        }
+        else {
+            przywrocNormalModal(oknoId);
+        }
+    }
 }
 
 function openModal(oknoId, przy) {
@@ -158,8 +199,8 @@ function openModal(oknoId, przy) {
 
     if (przy == 0) {
         $blok.css({
-            "left": leftValue,
-            "top": topValue
+            "left": leftValue + "px",
+            "top": topValue + "px"
         });
         $przycisk.show();
         setClickState($przycisk, true);
@@ -191,7 +232,7 @@ function openModal(oknoId, przy) {
     $("#okno" + oknoId).css("z-index", zindex);
 
     $(document).ready(function () {
-        $(".pasek").on("contextmenu", function (event) {
+        function showContextMenu(event) {
             event.preventDefault();
 
             var menuWidth = $context.outerWidth();
@@ -219,14 +260,17 @@ function openModal(oknoId, przy) {
                     "opacity": "100%"
                 });
             }, 1);
-        });
+        }
+
+        $("#okno" + oknoId +" .pasek").on("contextmenu", showContextMenu);
+        $("#oknoprzycisk" + oknoId).on("contextmenu", showContextMenu);
 
         $(".przyciskMenu").on("click", function (event) {
             $(".context-menu").hide();
         })
 
         $("#okno" + oknoId + " .pasek").on("dblclick", function () {
-            maksymalizujModal(oknoId);
+            dblclickPasek(oknoId);
         });
     });
 
@@ -264,10 +308,20 @@ function przywrocOkno(oknoId) {
 
     setClickState($przycisk, false);
     fokus(oknoId);
-    $blok.animate({
-        left: oknoXpos[oknoId],
-        top: oknoYpos[oknoId]
-    }, dlugoscAnimacji);
+
+    if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick").substr(0, 4) === 'maks') {
+        $blok.animate({
+            left: oknoXpos[oknoId] + "px",
+            top: oknoYpos[oknoId] + "px"
+        }, dlugoscAnimacji);
+    }
+    else {
+        $blok.css({
+            left: 0,
+            top: 50 + "px"
+        })
+    }
+
     $blok.show();
     setClickState($blok, true);
     $przycisk.addClass("pasekprzyciskOnScreen");
@@ -302,17 +356,20 @@ function minimalizujOkno(oknoId) {
 
     setClickState($przycisk, false);
 
-    oknoXpos[oknoId] = $blok.position().left;
-    oknoYpos[oknoId] = $blok.position().top;
+    if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick").substr(0, 4) === 'maks') {
+        oknoXpos[oknoId] = $blok.position().left;
+        oknoYpos[oknoId] = $blok.position().top;
+    }
 
     $blok.animate({
-        left: $przycisk.position().left,
+        left: $przycisk.position().left + "px",
         top: 0
     }, dlugoscAnimacji);
     $blok.css({
         "opacity": "0%",
         "transform": "scale(0.5)"
     });
+    $blok.removeClass("oknoActive");
     $przycisk.removeClass("pasekprzyciskActive");
     $przycisk.removeClass("pasekprzyciskOnScreen");
     setClickState($blok, false);
@@ -330,15 +387,15 @@ function maksymalizujModal(oknoId) {
     var $blok = $('[id^="okno' + oknoId + '"]');
     oknoXpos[oknoId] = $blok.position().left;
     oknoYpos[oknoId] = $blok.position().top;
-    oknoHeight[oknoId] = $blok.width();
-    oknoWidth[oknoId] = $blok.height();
+    oknoHeight[oknoId] = $blok.height();
+    oknoWidth[oknoId] = $blok.width();
 
     $blok.animate({
         left: 0,
         top: "50px",
-        width: "100%",
-        height: screen.height - 50
-    }, 50);
+        width: $("body").width() - 2 + "px",
+        height: $("body").height() - 52 + "px"
+    }, dlugoscAnimacji);
 
     $("#okno" + oknoId + " .pasek").css({
         "border-radius": "0"
@@ -346,16 +403,49 @@ function maksymalizujModal(oknoId) {
     $blok.css({
         "border-radius": "0"
     });
-    
-    toggleModal(oknoId, "przywrocPrzycisk(" + oknoId + ")");
+
     $blok.draggable("disable");
     $blok.resizable("disable");
 
-    $("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick", "przywrocNormalModal(" + oknoId +");")
+    $("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick", "przywrocNormalModal(" + oknoId + ");");
+    $("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("title", "Przywróć");
+
+    $("#context-menuOkno" + oknoId + " .maksymalizujMenu").attr("onclick", "przywrocNormalModal(" + oknoId + ");");
+    $("#context-menuOkno" + oknoId + " .maksymalizujMenu .maksymalizujTekst").text("Przywróć");
+    $("#context-menuOkno" + oknoId + " .maksymalizujMenu .shortcut").text("");
+
+    $("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj svg").html("<rect height='13' rx='2' ry='2' width='13' x='9' y='9'/><path d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/>");
 }
 
 function przywrocNormalModal(oknoId) {
-    console.log("jebac kurwy");
+    var $blok = $('[id^="okno' + oknoId + '"]');
+
+    $blok.animate({
+        left: oknoXpos[oknoId],
+        top: oknoYpos[oknoId],
+        width: oknoWidth[oknoId],
+        height: oknoHeight[oknoId]
+    }, dlugoscAnimacji);
+
+    $("#okno" + oknoId + " .pasek").css({
+        "border-radius": ""
+    });
+    $blok.css({
+        "border-radius": ""
+    });
+
+    $blok.draggable("enable");
+    $blok.resizable("enable");
+
+    $("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick", "maksymalizujModal(" + oknoId + ");");
+    $("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("title", "Maksymalizuj");
+
+    $("#context-menuOkno" + oknoId + " .maksymalizujMenu").attr("onclick", "maksymalizujModal(" + oknoId + ");");
+    $("#context-menuOkno" + oknoId + " .maksymalizujMenu .maksymalizujTekst").text("Maksymalizuj");
+    $("#context-menuOkno" + oknoId + " .maksymalizujMenu .shortcut").text("Shift + 🡅");
+
+    $("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj svg").html("<rect height='18' rx='2' ry='2' width='18' x='3' y='3'/>");
+
 }
 
 function minimalizujPrzycisk(oknoId) {
@@ -389,7 +479,7 @@ $(document).ready(function () {
     $(document).on('contextmenu', function (e) {
         e.preventDefault();
     });
-    otworzOkno("ustawienia.json");
+    otworzOkno("ustawienia.app");
 });
 
 $(window).on('load', function () {

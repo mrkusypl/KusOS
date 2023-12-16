@@ -1,8 +1,0 @@
-[
-    {
-        "tytul": "Ustawienia",
-        "ikona": "⚙️",
-        "resizable": "true",
-        "content": "<div class='content'><span class='ikona'>⚙️</span>W tym miejscu mogą pojawić się ustawienia...</div>"
-    }
-]

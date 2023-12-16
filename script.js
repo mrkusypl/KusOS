@@ -1,4 +1,5 @@
 const dlugoscAnimacji = 250;
+var oknoIdtoggleOkna = 0;
 
 var zindex = 1;
 var oknoXpos = [];
@@ -70,26 +71,22 @@ function handleShortcuts(event) {
             $(".context-menu").hide();
         }
     }
-
     else if (event.shiftKey && event.key === 'ArrowDown') {
         if (typeof ($(".oknoActive").prop("id")) != "undefined") {
             minimalizujModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)));
             $(".context-menu").hide();
         }
     }
-
     else if (event.shiftKey && event.key === 'ArrowUp') {
         if (typeof ($(".oknoActive").prop("id")) != "undefined") {
             maksymalizujModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)));
             $(".context-menu").hide();
         }
     }
-
     else if (event.shiftKey && event.key === 'M') {
         toggleModal();
         $(".context-menu").hide();
     }
-
     else if (event.key === 'Escape') {
         $(".context-menu").hide();
     }
@@ -123,8 +120,7 @@ function otworzOkno(nazwaJson) {
                 $(".loading").css({
                     "opacity": "100%"
                 });
-            }
-            else {
+            } else {
                 const dane = [{
                     "tytul": "Wystąpił błąd",
                     "ikona": "🛑",
@@ -132,7 +128,7 @@ function otworzOkno(nazwaJson) {
                     "maximize": "false",
                     "content": "<div class='content'><span class='ikona'>🛑</span>Aplikacja " + nazwaJson + " nie może zostać uruchomiona. Upewnij się, że nazwa programu jest prawidłowa.</div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
                 }];
-                
+
                 return dane;
             }
         }
@@ -144,19 +140,19 @@ function otworzOkno(nazwaJson) {
 
         $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + zindex + "; transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
 
-        var textDane = "<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><line x1='3' x2='21' y1='21' y2='21'/></svg></div>";
+        var textDane = "<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><line x1='3' x2='21' y1='21' y2='21'/></svg></div>";
         if (maximize === "true") {
-            textDane += "<div class='button-pasek maksymalizuj' title='Maksymalizuj' onclick='maksymalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><rect height='18' rx='2' ry='2' width='18' x='3' y='3'/></svg></div>";
+            textDane += "<div class='button-pasek maksymalizuj' title='Maksymalizuj' onclick='maksymalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><rect height='18' rx='2' ry='2' width='18' x='3' y='3'/></svg></div>";
         }
-        textDane += "<div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><line x1='22' x2='2' y1='3' y2='21'/><line x1='2' x2='22' y1='3' y2='21'/></svg></div></div></div>" + content + "</div>";
+        textDane += "<div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><line x1='22' x2='2' y1='3' y2='21'/><line x1='2' x2='22' y1='3' y2='21'/></svg></div></div></div>" + content + "</div>";
 
-        textDane += "<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div>Minimalizuj</div><div class='shortcut'>Shift + 🡇</div></div>";
+        textDane += "<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu minimalizujMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div class='minimalizujTekst'>Minimalizuj</div><div class='shortcut'>Shift + 🡇</div></div>";
         if (maximize === "true") {
             textDane += "<div class='przyciskMenu maksymalizujMenu' onclick='maksymalizujModal(" + oknoIlosc + ")'><div class='maksymalizujTekst'>Maksymalizuj</div><div class='shortcut'>Shift + 🡅</div></div>";
         }
 
         textDane += "<div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>";
-        $(".powiadomienie").before(textDane);
+        $("body").append(textDane);
 
         $("#okno" + oknoIlosc + " .przyciski #OK").attr("onclick", "closeModal(" + oknoIlosc + ")");
         $(".context-menu").hide();
@@ -172,8 +168,7 @@ function dblclickPasek(oknoId) {
     if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").length != 0) {
         if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick").substr(0, 4) === 'maks') {
             maksymalizujModal(oknoId);
-        }
-        else {
+        } else {
             przywrocNormalModal(oknoId);
         }
     }
@@ -262,7 +257,7 @@ function openModal(oknoId, przy) {
             }, 1);
         }
 
-        $("#okno" + oknoId +" .pasek").on("contextmenu", showContextMenu);
+        $("#okno" + oknoId + " .pasek").on("contextmenu", showContextMenu);
         $("#oknoprzycisk" + oknoId).on("contextmenu", showContextMenu);
 
         $(".przyciskMenu").on("click", function (event) {
@@ -292,10 +287,9 @@ function toggleModal(oknoId, callback) {
 
 function przywrocModal(oknoId) {
     if (typeof oknoId === 'undefined') {
-        var oknoIdtoggleOkna = 1;
-        $('[id^="okno"]').each(function () {
+        $('[id^="oknoprzycisk"]').each(function () {
+            oknoIdtoggleOkna = parseInt(this.id.substr(this.id.length - 1, 1));
             przywrocOkno(oknoIdtoggleOkna);
-            oknoIdtoggleOkna++;
         });
     } else {
         przywrocOkno(oknoId);
@@ -309,17 +303,23 @@ function przywrocOkno(oknoId) {
     setClickState($przycisk, false);
     fokus(oknoId);
 
-    if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick").substr(0, 4) === 'maks') {
+    if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick") != undefined) {
+        if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick").substr(0, 4) === 'maks') {
+            $blok.animate({
+                left: oknoXpos[oknoId] + "px",
+                top: oknoYpos[oknoId] + "px"
+            }, dlugoscAnimacji);
+        } else {
+            $blok.css({
+                left: 0,
+                top: $(".pulpit").position().top
+            })
+        }
+    } else {
         $blok.animate({
             left: oknoXpos[oknoId] + "px",
             top: oknoYpos[oknoId] + "px"
         }, dlugoscAnimacji);
-    }
-    else {
-        $blok.css({
-            left: 0,
-            top: 50 + "px"
-        })
     }
 
     $blok.show();
@@ -336,14 +336,18 @@ function przywrocOkno(oknoId) {
     setTimeout(function () {
         setClickState($przycisk, true);
     }, dlugoscAnimacji);
+
+    $("#context-menuOkno" + oknoId + " .minimalizujMenu").attr("onclick", "minimalizujModal(" + oknoId + ");");
+    $("#context-menuOkno" + oknoId + " .minimalizujMenu .minimalizujTekst").text("Minimalizuj");
+    $("#context-menuOkno" + oknoId + " .minimalizujMenu .shortcut").text("Shift + 🡇");
+    $("#context-menuOkno" + oknoId + " .maksymalizujMenu").show();
 }
 
 function minimalizujModal(oknoId) {
     if (typeof oknoId === 'undefined') {
-        var oknoIdtoggleOkna = 1;
         $('[id^="okno"].pasekprzyciskOnScreen').each(function () {
+            oknoIdtoggleOkna = parseInt(this.id.substr(this.id.length - 1, 1));
             minimalizujOkno(oknoIdtoggleOkna);
-            oknoIdtoggleOkna++;
         });
     } else {
         minimalizujOkno(oknoId);
@@ -356,14 +360,19 @@ function minimalizujOkno(oknoId) {
 
     setClickState($przycisk, false);
 
-    if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick").substr(0, 4) === 'maks') {
+    if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick") != undefined) {
+        if ($("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj").attr("onclick").substr(0, 4) === 'maks') {
+            oknoXpos[oknoId] = $blok.position().left;
+            oknoYpos[oknoId] = $blok.position().top;
+        }
+    } else {
         oknoXpos[oknoId] = $blok.position().left;
         oknoYpos[oknoId] = $blok.position().top;
     }
 
     $blok.animate({
-        left: $przycisk.position().left + "px",
-        top: 0
+        left: $przycisk.position().left + ($przycisk.width()/2) - ($blok.width()/2) + "px",
+        top: $(".pasekzadan").position().top + "px",
     }, dlugoscAnimacji);
     $blok.css({
         "opacity": "0%",
@@ -381,6 +390,11 @@ function minimalizujOkno(oknoId) {
     setTimeout(function () {
         setClickState($przycisk, true);
     }, dlugoscAnimacji);
+
+    $("#context-menuOkno" + oknoId + " .minimalizujMenu").attr("onclick", "przywrocModal(" + oknoId + ");");
+    $("#context-menuOkno" + oknoId + " .minimalizujMenu .minimalizujTekst").text("Przywróć");
+    $("#context-menuOkno" + oknoId + " .minimalizujMenu .shortcut").text("");
+    $("#context-menuOkno" + oknoId + " .maksymalizujMenu").hide();
 }
 
 function maksymalizujModal(oknoId) {
@@ -392,7 +406,7 @@ function maksymalizujModal(oknoId) {
 
     $blok.animate({
         left: 0,
-        top: "50px",
+        top: $(".pulpit").position().top,
         width: $("body").width() - 2 + "px",
         height: $("body").height() - 52 + "px"
     }, dlugoscAnimacji);
@@ -458,8 +472,7 @@ function minimalizujPrzycisk(oknoId) {
         toggleModal(oknoId, "przywrocPrzycisk(" + oknoId + ")");
         fokus(oknoId);
         $(".pasekprzycisk").removeClass("pasekprzyciskActive");
-    }
-    else {
+    } else {
         fokus(oknoId);
         $(".pasekprzycisk").removeClass("pasekprzyciskActive");
         $("#oknoprzycisk" + oknoId).addClass("pasekprzyciskActive");
@@ -494,20 +507,13 @@ $(window).on('load', function () {
 function toggleOkna() {
     if ($(".pasekprzyciskOnScreen").length != 0) {
         minimalizujModal();
-    }
-    else {
+    } else {
         przywrocModal();
     }
 }
 
 function lightMode() {
     $('body').toggleClass('light');
-    showNotification();
-}
-
-function showNotification() {
-    var notification = $("#powiadomienie");
-    notification.slideDown().delay(2000).slideUp();
 }
 
 function fokus(oknoId) {
@@ -584,12 +590,18 @@ $(document).ready(function () {
         var teraz = new Date();
 
         var godzina = teraz.getHours();
+        var godzinaKat = (360 / 12 * godzina) + 90;
+        $("#hour").css("transform", "rotate(" + godzinaKat + "deg)");
         godzina = (godzina < 10 ? "0" : "") + godzina;
 
         var minuta = teraz.getMinutes();
+        var minutaKat = 360 / 60 * minuta + 90;
+        $("#minute").css("transform", "rotate(" + minutaKat + "deg)");
         minuta = (minuta < 10 ? "0" : "") + minuta;
 
         var sekunda = teraz.getSeconds();
+        var sekundaKat = 360 / 60 * sekunda + 90;
+        $("#second").css("transform", "rotate(" + sekundaKat + "deg)");
         sekunda = (sekunda < 10 ? "0" : "") + sekunda;
 
         var dzien = teraz.getDate();
@@ -602,9 +614,24 @@ $(document).ready(function () {
 
         var godzinaElement = $("#godzina");
         var dataElement = $("#data");
+        var czasElement = $(".czas");
 
         godzinaElement.text(godzina + ":" + minuta + ":" + sekunda);
         dataElement.text(dzien + "." + miesiac + "." + rok);
+
+        function ustawAtrybutTitle() {
+            var dniTygodnia = ['niedziela', 'poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota'];
+            var dzienTygodnia = dniTygodnia[teraz.getDay()];
+            var pelnaData = dzienTygodnia + ', ' + dzien + ' ' + nazwaMiesiaca(miesiac) + ' ' + rok;
+            czasElement.attr("title", pelnaData);
+        }
+    
+        function nazwaMiesiaca(miesiac) {
+            var nazwyMiesiecy = ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'września', 'października', 'listopada', 'grudnia'];
+            return nazwyMiesiecy[miesiac - 1];
+        }
+
+        ustawAtrybutTitle();
     }
 
     setInterval(aktualizujDateGodzine, 1000);
@@ -614,3 +641,34 @@ $(document).ready(function () {
 
     $("#audio")[0].volume = 0.1;
 });
+
+function pasekPozycja() {
+    var pasekzadan = $(".pasekzadan");
+    var pulpit = $(".pulpit");
+
+    var czyZamienione = pasekzadan.next().attr("class") === "pulpit";
+
+    if (czyZamienione) {
+        pulpit.after(pasekzadan);
+    } else {
+        pasekzadan.after(pulpit);
+    }
+
+    $('[id^="oknoprzycisk"]').each(function () {
+        oknoId = parseInt(this.id.substr(this.id.length - 1, 1));
+
+        var $przycisk = $('[id^="oknoprzycisk' + oknoId + '"]');
+        var $blok = $('[id^="okno' + oknoId + '"]');
+        
+        if(!$("#oknoprzycisk" + oknoId).hasClass("pasekprzyciskOnScreen")) {
+            $blok.css({
+                left: $przycisk.position().left + ($przycisk.width()/2) - ($blok.width()/2) + "px",
+                top: $(".pasekzadan").position().top + "px",
+            });
+        }
+    });
+}
+
+function zegarAnalogowy() {
+    $("#clock").toggle();
+}

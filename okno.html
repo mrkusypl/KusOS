@@ -71,7 +71,7 @@
     </style>
 </head>
 
-<body class="">
+<body class="light">
     <div class="loading">
         <img src="./kusOSlogoSVG.svg" />
         <div class="loadingNapis">
@@ -79,11 +79,24 @@
         </div>
     </div>
 
+    <audio id="audio">
+        <source src="./error.mp3" type="audio/mp3">
+    </audio>
+
     <div class="pasekzadan" onmousedown="fokus(0)">
         <div class="pasekprzyciski"></div>
-        <div class="zegar">
-            <span id="godzina"></span>
-            <span id="data"></span>
+
+        <div class="czas" title="">
+            <div class="zegar">
+                <span id="godzina"></span>
+                <span id="data"></span>
+            </div>
+
+            <div id="clock" style="display: none;">
+                <div id="hour"></div>
+                <div id="minute"></div>
+                <div id="second"></div>
+            </div>
         </div>
         <div class="toggleOkna" title="Pokaż pulpit" onclick="toggleOkna()"></div>
     </div>
@@ -101,15 +114,9 @@
         <div class="przyciskMenu" onclick="otworzOkno('ustawienia.app')">⚙️ Ustawienia</div>
         <div class="przyciskMenu" onclick="otworzOkno('pusteokno.app')">🪹 Puste okno</div>
         <div class="przyciskMenu" onclick="lightMode()">🖌️ Przełącz tryb jasny/ciemny</div>
+        <div class="przyciskMenu" onclick="pasekPozycja()">🖥️ Przełącz pozycję paska</div>
+        <div class="przyciskMenu" onclick="zegarAnalogowy()">⏲️ Pokaż/ukryj zegar analogowy na pasku</div>
     </div>
-
-    <div id="powiadomienie" class="powiadomienie">
-        Tryb jasny/ciemny został zmieniony!
-    </div>
-
-    <audio id="audio">
-        <source src="./error.mp3" type="audio/mp3">
-    </audio>
 </body>
 
 </html>

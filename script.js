@@ -98,18 +98,20 @@ function playSound(nazwa) {
     $("#audio")[0].play();
 }
 
-function otworzOkno(nazwaJson) {
+function otworzOkno(nazwaYAML) {
     $("body").css("cursor", "wait");
     $("body").hide().show(0);
 
-    async function wczytajDaneZJSON() {
+    async function wczytajDaneZYAML() {
         try {
-            const response = await fetch(nazwaJson);
-            const dane = await response.json();
-            return dane;
+            const response = await fetch(nazwaYAML);
+            const yamlText = await response.text();
+
+            const yamlData = jsyaml.load(yamlText);
+
+            return yamlData;
         } catch (error) {
             oknoIlosc = wolneId();
-
             playSound("./error.mp3");
 
             if (error.message.includes('Failed to fetch')) {
@@ -126,7 +128,7 @@ function otworzOkno(nazwaJson) {
                     "ikona": "🛑",
                     "resizable": "false",
                     "maximize": "false",
-                    "content": "<div class='content'><span class='ikona'>🛑</span>Aplikacja " + nazwaJson + " nie może zostać uruchomiona. Upewnij się, że nazwa programu jest prawidłowa.</div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
+                    "content": "<div class='content'><span class='ikona'>🛑</span>Aplikacja " + nazwaYAML + " nie może zostać uruchomiona. Upewnij się, że nazwa programu jest prawidłowa.</div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
                 }];
 
                 return dane;
@@ -159,7 +161,7 @@ function otworzOkno(nazwaJson) {
         openModal(oknoIlosc, 0);
     }
 
-    wczytajDaneZJSON().then((dane) => {
+    wczytajDaneZYAML().then((dane) => {
         dane.forEach((okno) => stworzOkno(okno));
     });
 }
@@ -492,7 +494,7 @@ $(document).ready(function () {
     $(document).on('contextmenu', function (e) {
         e.preventDefault();
     });
-    otworzOkno("ustawienia.app");
+    otworzOkno("debug.app");
 });
 
 $(window).on('load', function () {
@@ -510,10 +512,6 @@ function toggleOkna() {
     } else {
         przywrocModal();
     }
-}
-
-function lightMode() {
-    $('body').toggleClass('light');
 }
 
 function fokus(oknoId) {
@@ -543,12 +541,10 @@ $(document).ready(function () {
         var posX = event.pageX;
         var posY = event.pageY;
 
-        // Dostosuj pozycję X, aby kursor był w lewym lub prawym rogu menu
         if (posX + menuWidth > $(window).width()) {
             posX -= menuWidth;
         }
 
-        // Dostosuj pozycję Y, aby kursor był w górnym lub dolnym rogu menu
         if (posY + menuHeight > $(window).height()) {
             posY -= menuHeight;
         }
@@ -641,33 +637,6 @@ $(document).ready(function () {
 
     $("#audio")[0].volume = 0.1;
 });
-
-function pasekPozycja() {
-    var pasekzadan = $(".pasekzadan");
-    var pulpit = $(".pulpit");
-
-    var czyZamienione = pasekzadan.next().attr("class") === "pulpit";
-
-    if (czyZamienione) {
-        pulpit.after(pasekzadan);
-    } else {
-        pasekzadan.after(pulpit);
-    }
-
-    $('[id^="oknoprzycisk"]').each(function () {
-        oknoId = parseInt(this.id.substr(this.id.length - 1, 1));
-
-        var $przycisk = $('[id^="oknoprzycisk' + oknoId + '"]');
-        var $blok = $('[id^="okno' + oknoId + '"]');
-        
-        if(!$("#oknoprzycisk" + oknoId).hasClass("pasekprzyciskOnScreen")) {
-            $blok.css({
-                left: $przycisk.position().left + ($przycisk.width()/2) - ($blok.width()/2) + "px",
-                top: $(".pasekzadan").position().top + "px",
-            });
-        }
-    });
-}
 
 function zegarAnalogowy() {
     $("#clock").toggle();

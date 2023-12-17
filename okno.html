@@ -23,6 +23,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"
         integrity="sha512-0bEtK0USNd96MnO4XhH8jhv3nyRF0eK87pJke6pkYf3cM0uDIhNJy9ltuzqgypoIFXw3JSuiy04tVk4AjpZdZw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.js"
+        integrity="sha512-CwxrLIN0dww6lRc/oKeZiI9oGlOob2HPMU0Yu0g+P3/G1cuTii+tt0jpyEKhilfrV7D/zmvKiVPIHUDU6xbBxg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
     <script src="./script.js"></script>
     <link rel="stylesheet" href="./style.css" />
@@ -111,11 +115,9 @@
 
     <div class="context-menu" id="context-menuPulpit">
         <div class="przyciskMenu" onclick="otworzOkno('nieistniejacyplik.app')">🛑 Wywołaj błąd</div>
-        <div class="przyciskMenu" onclick="otworzOkno('ustawienia.app')">⚙️ Ustawienia</div>
+        <div class="przyciskMenu" onclick="otworzOkno('ustawienia.app')">🛠️ Ustawienia</div>
         <div class="przyciskMenu" onclick="otworzOkno('pusteokno.app')">🪹 Puste okno</div>
-        <div class="przyciskMenu" onclick="lightMode()">🖌️ Przełącz tryb jasny/ciemny</div>
-        <div class="przyciskMenu" onclick="pasekPozycja()">🖥️ Przełącz pozycję paska</div>
-        <div class="przyciskMenu" onclick="zegarAnalogowy()">⏲️ Pokaż/ukryj zegar analogowy na pasku</div>
+        <div class="przyciskMenu" onclick="otworzOkno('debug.app')">🍀 Debug</div>
     </div>
 </body>
 

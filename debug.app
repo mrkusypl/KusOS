@@ -1,6 +1,6 @@
-- tytul: "Puste okno"
-  ikona: "🪹"
+- tytul: "Debug"
+  ikona: "🍀"
   resizable: "true"
-  maximize: "false"
+  maximize: "true"
   content: >
     <div class="content"></div>

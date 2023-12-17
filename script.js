@@ -6,6 +6,7 @@ var oknoXpos = [];
 var oknoYpos = [];
 var oknoHeight = [];
 var oknoWidth = [];
+var oknoContent = [];
 
 $(document).on('keydown', handleShortcuts);
 
@@ -28,6 +29,7 @@ function closeModal(oknoId, min) {
     const $przycisk = $('[id^="oknoprzycisk' + oknoId + '"]');
     const $blok = $('[id^="okno' + oknoId + '"]');
     const $context = $('[id^="context-menuOkno' + oknoId + '"]');
+    delete oknoContent[oknoId];
     $przycisk.removeClass("pasekprzyciskOnScreen");
     $blok.css({
         "opacity": "0%",
@@ -94,8 +96,35 @@ function handleShortcuts(event) {
 
 function playSound(nazwa) {
     $("#audio source").attr("src", nazwa);
-    $("#audio")[0].load()
+    $("#audio")[0].load();
     $("#audio")[0].play();
+}
+
+function stworzOkno(dane) {
+    const { tytul, ikona, resizable, maximize, content } = dane;
+    oknoIlosc = wolneId();
+
+    oknoContent[oknoIlosc] = content;
+
+    $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + zindex + "; transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
+
+    var textDane = "<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><line x1='3' x2='21' y1='21' y2='21'/></svg></div>";
+    if (maximize === "true") {
+        textDane += "<div class='button-pasek maksymalizuj' title='Maksymalizuj' onclick='maksymalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><rect height='18' rx='2' ry='2' width='18' x='3' y='3'/></svg></div>";
+    }
+    textDane += "<div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><line x1='22' x2='2' y1='3' y2='21'/><line x1='2' x2='22' y1='3' y2='21'/></svg></div></div></div>" + content + "</div>";
+
+    textDane += "<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu minimalizujMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div class='minimalizujTekst'>Minimalizuj</div><div class='shortcut'>Shift + 🡇</div></div>";
+    if (maximize === "true") {
+        textDane += "<div class='przyciskMenu maksymalizujMenu' onclick='maksymalizujModal(" + oknoIlosc + ")'><div class='maksymalizujTekst'>Maksymalizuj</div><div class='shortcut'>Shift + 🡅</div></div>";
+    }
+
+    textDane += "<div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>";
+    $("body").append(textDane);
+
+    $("#okno" + oknoIlosc + " .przyciski #OK").attr("onclick", "closeModal(" + oknoIlosc + ")");
+    $(".context-menu").hide();
+    openModal(oknoIlosc, 0);
 }
 
 function otworzOkno(nazwaYAML) {
@@ -109,7 +138,13 @@ function otworzOkno(nazwaYAML) {
 
             const yamlData = jsyaml.load(yamlText);
 
-            return yamlData;
+            if (typeof (yamlData) === "object") {
+
+                return yamlData;
+            } else {
+                return blad;
+            }
+
         } catch (error) {
             oknoIlosc = wolneId();
             playSound("./error.mp3");
@@ -128,7 +163,7 @@ function otworzOkno(nazwaYAML) {
                     "ikona": "🛑",
                     "resizable": "false",
                     "maximize": "false",
-                    "content": "<div class='content'><span class='ikona'>🛑</span>Aplikacja " + nazwaYAML + " nie może zostać uruchomiona. Upewnij się, że nazwa programu jest prawidłowa.</div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
+                    "content": "<div class='content'><span class='ikona'>🛑</span>Aplikacja " + nazwaYAML + " nie może zostać uruchomiona. Upewnij się, że nazwa programu jest prawidłowa i spróbuj ponownie.</div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
                 }];
 
                 return dane;
@@ -136,33 +171,23 @@ function otworzOkno(nazwaYAML) {
         }
     }
 
-    function stworzOkno(dane) {
-        const { tytul, ikona, resizable, maximize, content } = dane;
-        oknoIlosc = wolneId();
-
-        $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + zindex + "; transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
-
-        var textDane = "<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><line x1='3' x2='21' y1='21' y2='21'/></svg></div>";
-        if (maximize === "true") {
-            textDane += "<div class='button-pasek maksymalizuj' title='Maksymalizuj' onclick='maksymalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><rect height='18' rx='2' ry='2' width='18' x='3' y='3'/></svg></div>";
-        }
-        textDane += "<div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><line x1='22' x2='2' y1='3' y2='21'/><line x1='2' x2='22' y1='3' y2='21'/></svg></div></div></div>" + content + "</div>";
-
-        textDane += "<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu minimalizujMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div class='minimalizujTekst'>Minimalizuj</div><div class='shortcut'>Shift + 🡇</div></div>";
-        if (maximize === "true") {
-            textDane += "<div class='przyciskMenu maksymalizujMenu' onclick='maksymalizujModal(" + oknoIlosc + ")'><div class='maksymalizujTekst'>Maksymalizuj</div><div class='shortcut'>Shift + 🡅</div></div>";
-        }
-
-        textDane += "<div class='przyciskMenu' onclick='closeModal(" + oknoIlosc + ", 0)'><div>Zamnkij</div><div class='shortcut'>Shift + F4</div></div></div>";
-        $("body").append(textDane);
-
-        $("#okno" + oknoIlosc + " .przyciski #OK").attr("onclick", "closeModal(" + oknoIlosc + ")");
-        $(".context-menu").hide();
-        openModal(oknoIlosc, 0);
-    }
-
     wczytajDaneZYAML().then((dane) => {
-        dane.forEach((okno) => stworzOkno(okno));
+        dane.forEach(function (okno) {
+            oknoId = $.inArray(dane[0].content, oknoContent);
+
+            if (oknoId === -1) {
+                stworzOkno(okno);
+            } else {
+                if($("#oknoprzycisk" + oknoId).hasClass("pasekprzyciskOnScreen")) {
+                    fokus(oknoId);
+                } else {
+                    przywrocModal(oknoId);
+                }
+
+                $("body").css("cursor", "auto");
+                $("body").hide().show(0);
+            }
+        });
     });
 }
 
@@ -373,7 +398,7 @@ function minimalizujOkno(oknoId) {
     }
 
     $blok.animate({
-        left: $przycisk.position().left + ($przycisk.width()/2) - ($blok.width()/2) + "px",
+        left: $przycisk.position().left + ($przycisk.width() / 2) - ($blok.width() / 2) + "px",
         top: $(".pasekzadan").position().top + "px",
     }, dlugoscAnimacji);
     $blok.css({
@@ -494,7 +519,7 @@ $(document).ready(function () {
     $(document).on('contextmenu', function (e) {
         e.preventDefault();
     });
-    otworzOkno("debug.app");
+    otworzOkno("kutaksuck.app");
 });
 
 $(window).on('load', function () {
@@ -621,7 +646,7 @@ $(document).ready(function () {
             var pelnaData = dzienTygodnia + ', ' + dzien + ' ' + nazwaMiesiaca(miesiac) + ' ' + rok;
             czasElement.attr("title", pelnaData);
         }
-    
+
         function nazwaMiesiaca(miesiac) {
             var nazwyMiesiecy = ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'września', 'października', 'listopada', 'grudnia'];
             return nazwyMiesiecy[miesiac - 1];

@@ -470,6 +470,7 @@ select {
     min-width: 120px;
     height: 45px;
     font-size: 16px;
+    color: #eeeeee;
 }
 
 .light select {

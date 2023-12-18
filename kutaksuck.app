@@ -24,19 +24,7 @@
         zmienne();
 
         function reset() {
-            count = 0;
-            x = 0;
-            o = 0;
-            klikniete = [
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0]
-            ];
-            plansza = [
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0]
-            ];
+            zmienne();
 
             $("tr").empty();
 

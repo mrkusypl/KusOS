@@ -85,8 +85,8 @@ function handleShortcuts(event) {
             $(".context-menu").hide();
         }
     }
-    else if (event.shiftKey && event.key === 'M') {
-        toggleModal();
+    else if (event.shiftKey && (event.key === 'M' || event.key === 'm')) {
+        toggleOkna();
         $(".context-menu").hide();
     }
     else if (event.key === 'Escape') {
@@ -104,10 +104,24 @@ function stworzOkno(dane) {
     const { tytul, ikona, resizable, maximize, content } = dane;
     oknoIlosc = wolneId();
 
-    oknoContent[oknoIlosc] = content;
+    oknoContent[oknoIlosc] = content + tytul + resizable;
 
-    $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='order: " + zindex + "; transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
+    $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' data-id='" + oknoIlosc +"' id='oknoprzycisk" + oknoIlosc + "' style='transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
 
+    $(document).ready(function() {
+        $(".pasekprzyciski").sortable({
+            axis: "x",
+            containment: ".pasekprzyciski",
+            tolerance: "pointer",
+            revert: true,
+            update: function(event, ui) {
+                var changedItem = ui.item;
+                var newIndex = changedItem.index();
+            }
+        });
+      
+        $(".przycisk").disableSelection();
+      });
     var textDane = "<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><line x1='3' x2='21' y1='21' y2='21'/></svg></div>";
     if (maximize === "true") {
         textDane += "<div class='button-pasek maksymalizuj' title='Maksymalizuj' onclick='maksymalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><rect height='18' rx='2' ry='2' width='18' x='3' y='3'/></svg></div>";
@@ -173,7 +187,7 @@ function otworzOkno(nazwaYAML) {
 
     wczytajDaneZYAML().then((dane) => {
         dane.forEach(function (okno) {
-            oknoId = $.inArray(dane[0].content, oknoContent);
+            oknoId = $.inArray(dane[0].content+dane[0].tytul+dane[0].resizable, oknoContent);
 
             if (oknoId === -1) {
                 stworzOkno(okno);

@@ -8,7 +8,6 @@ body {
 
 .okno,
 .context-menu {
-    min-width: 400px;
     height: max-content;
     width: max-content;
     background-color: #3d3d3d;
@@ -20,6 +19,14 @@ body {
     transition: opacity 200ms, transform 300ms, background-color 200ms, border-color 100ms;
     z-index: 1000;
     position: absolute;
+}
+
+.okno {
+    min-width: 400px;
+}
+
+.context-menu .przyciskMenu {
+    min-width: 250px;
 }
 
 .light .okno,
@@ -120,7 +127,7 @@ body {
     color: white;
     border-bottom: 1px solid #00000031;
     text-shadow: 1px 1px 3px #111111;
-    transition: all 200ms;
+    transition: all 100ms;
 }
 
 .pasek {
@@ -299,7 +306,7 @@ button {
     align-items: center;
     padding-left: 5px;
     font-size: 16px;
-    transition: all 0.1s;
+    transition: background-color 0.1s, font 0.1s;
     position: sticky;
 }
 
@@ -308,7 +315,7 @@ button {
 }
 
 .pasekprzycisk:active {
-    background-color: #00000013;
+    background-color: var(--kolor);
     transform: scale(0.98);
 }
 
@@ -319,7 +326,7 @@ button {
 }
 
 .pasekprzyciskActive {
-    background-color: #00000054;
+    background-color: #00000028;
     border-color: #cde4ff62;
 }
 
@@ -387,7 +394,9 @@ button {
     background-color: #eeeeee;
 }
 
-#hour, #minute, #second {
+#hour,
+#minute,
+#second {
     position: absolute;
     width: 48%;
     height: 2px;
@@ -477,4 +486,43 @@ select {
     border: 1px solid #111111;
     background-color: inherit;
     color: #111111;
+}
+
+.build {
+    color: #bbb;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #757575 #DFE9EB;
+}
+
+*::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;border-radius: 20px;
+}
+
+*::-webkit-scrollbar-track {
+    background-color: #DFE9EB;
+}
+
+*::-webkit-scrollbar-track:hover {
+    background-color: #DFE9EB;
+}
+
+*::-webkit-scrollbar-track:active {
+    background-color: #DFE9EB;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #757575;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #A3A3A3;
+}
+
+*::-webkit-scrollbar-thumb:active {
+    background-color: #A3A3A3;
 }

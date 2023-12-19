@@ -33,7 +33,7 @@
 
     <style>
         body {
-            position: absolute;
+            position: fixed;
             background: url(./wallpaper.jpg) bottom;
             color: #eeeeee;
             font-family: Tahoma, sans-serif;
@@ -109,7 +109,7 @@
         <div class="wersja">
             <a href="https://github.com/mrkusypl/KusOS" target="_blank"><img src="./kusOSlogoSVG.svg"
                     title="Przejdź na GitHub" alt="KusOS - logo" /></a><br />
-            KusOS | Build 20231218_v0.46<br />
+            KusOS <span class="build"></span><br />
         </div>
     </div>
 
@@ -118,6 +118,7 @@
         <div class="przyciskMenu" onclick="otworzOkno('ustawienia.app')">🛠️ Ustawienia</div>
         <div class="przyciskMenu" onclick="otworzOkno('pusteokno.app')">🪹 Puste okno</div>
         <div class="przyciskMenu" onclick="otworzOkno('kutaksuck.app')">🎮 Kółko i krzyżyk</div>
+        <div class="przyciskMenu" onclick="otworzOkno('terminal.app')">⌨️ Terminal</div>
         <div class="przyciskMenu" onclick="otworzOkno('debug.app')">🍀 Debug</div>
     </div>
 </body>

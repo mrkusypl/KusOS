@@ -1,3 +1,5 @@
+build = "Build 20231219_v0.47";
+
 const dlugoscAnimacji = 250;
 var oknoIdtoggleOkna = 0;
 
@@ -46,7 +48,6 @@ function closeModal(oknoId, min) {
     if (min != 1) {
         setTimeout(function () {
             $przycisk.css({
-                "opacity": "0%",
                 "transform": "scale(0.9) rotateX(20deg)"
             });
         }, 100);
@@ -67,6 +68,9 @@ function closeModal(oknoId, min) {
 }
 
 function handleShortcuts(event) {
+    const activeElement = document.activeElement;
+    const isInput = activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA';
+
     if (event.shiftKey && event.key === 'F4') {
         if (typeof ($(".oknoActive").prop("id")) != "undefined") {
             closeModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)), 0);
@@ -85,7 +89,10 @@ function handleShortcuts(event) {
             $(".context-menu").hide();
         }
     }
-    else if (event.shiftKey && (event.key === 'M' || event.key === 'm')) {
+    if (isInput) {
+        return;
+    }
+    else if (event.shiftKey && event.key.toLowerCase() === 'm') {
         toggleOkna();
         $(".context-menu").hide();
     }
@@ -101,23 +108,24 @@ function playSound(nazwa) {
 }
 
 function stworzOkno(dane) {
-    const { tytul, ikona, resizable, maximize, content } = dane;
+    var { tytul, ikona, resizable, maximize, content } = dane;
     oknoIlosc = wolneId();
 
     oknoContent[oknoIlosc] = content + tytul + resizable;
+    content = content.replace("oknoIlosc", oknoIlosc);
 
-    $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' data-id='" + oknoIlosc +"' id='oknoprzycisk" + oknoIlosc + "' style='transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
+    $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
 
     $(document).ready(function() {
         $(".pasekprzyciski").sortable({
             axis: "x",
             containment: ".pasekprzyciski",
             tolerance: "pointer",
-            revert: true,
+            revert: 50,
             update: function(event, ui) {
                 var changedItem = ui.item;
                 var newIndex = changedItem.index();
-            }
+            },
         });
       
         $(".przycisk").disableSelection();
@@ -153,7 +161,6 @@ function otworzOkno(nazwaYAML) {
             const yamlData = jsyaml.load(yamlText);
 
             if (typeof (yamlData) === "object") {
-
                 return yamlData;
             } else {
                 return blad;
@@ -533,7 +540,7 @@ $(document).ready(function () {
     $(document).on('contextmenu', function (e) {
         e.preventDefault();
     });
-    otworzOkno("kutaksuck.app");
+    otworzOkno("terminal.app");
 });
 
 $(window).on('load', function () {
@@ -674,7 +681,9 @@ $(document).ready(function () {
         aktualizujDateGodzine();
     });
 
-    $("#audio")[0].volume = 0.1;
+    $("#audio")[0].volume = 0.5;
+
+    $(".build").text(build);
 });
 
 function zegarAnalogowy() {

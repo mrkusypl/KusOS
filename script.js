@@ -1,4 +1,4 @@
-build = "Build 20231219_v0.47";
+build = "Build 20231220_v0.48";
 
 const dlugoscAnimacji = 250;
 var oknoIdtoggleOkna = 0;

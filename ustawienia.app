@@ -4,29 +4,46 @@
   maximize: "false"
   content: >
     <div class="content" style="display: flex; flex-direction: column">
-        <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+        <div style=" width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
             <div style="font-size: 21px">Ustaw kolor wiodący:</div>
-            <input type="color" id="kolorInput" value="#000000">
+            <input  style="margin-left: 100px;" type="color" id="kolorInput" value="#000000">
         </div>
         <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
             <div style="font-size: 21px">Tryb wyświetlania:</div>
-            <select id="modeSelect">
+            <select style="margin-left: 100px;" id="modeSelect">
                 <option value="light">Jasny</option>
                 <option value="dark" id='ciemny'>Ciemny</option>
             </select>
         </div>
         <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
             <div style="font-size: 21px">Pozycja paska:</div>
-            <select id="pasekSelect">
+            <select style="margin-left: 100px;" id="pasekSelect">
                 <option value="gora" id="gora">Góra</option>
                 <option value="dol" id="dol">Dół</option>
             </select>
         </div>
         <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
             <div style="font-size: 21px">Zegar analogowy:</div>
-            <select id="zegarSelect">
+            <select style="margin-left: 100px;" id="zegarSelect">
                 <option value="wylZegar" id="wylZegar">Wyłącz</option>
                 <option value="wlZegar" id="wlZegar">Włącz</option>
+            </select>
+        </div>
+        <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+            <div style="font-size: 21px">Tapeta:</div>
+            <select style="margin-left: 100px;" id="tapetaSelect">
+                <option value="wallpaper1.jpg" id="wallpaper1">kusOS</option>
+                <option value="wallpaper2.jpg" id="wallpaper2">Tutel</option>
+                <option value="wallpaper3.jpg" id="wallpaper3">Pracownik</option>
+                <option value="wallpaper4.jpg" id="wallpaper4">Pływak</option>
+                <option value="nic" id="nic">Nic</option>
+            </select>
+        </div>
+        <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+            <div style="font-size: 21px">Wyświetl wersję systemu:</div>
+            <select style="margin-left: 100px;" id="wersjaSelect">
+                <option value="wlWersja" id="wlWersja">Włącz</option>
+                <option value="wylWersja" id="wylWersja">Wyłącz</option>
             </select>
         </div>
     </div>
@@ -97,5 +114,39 @@
             } else {
                 $("#wlZegar").attr("selected", "");
             }
+
+            $("#tapetaSelect").change(function () {
+                if($(this).val() === "nic") {
+                    $("body").css({
+                        "background-image": "none",
+                        "background-color": "#111111"
+                    });
+                } else {
+                    $("body").css("background-image", "url(./wallpaper/"+$(this).val()+")");
+                }
+            });
+            if($("body").css("background-image").substr($("body").css("background-image").length-5, 3) != "jpg") {
+                $("#nic").attr("selected", "");
+            } else {
+                tapetaNazwa = '#' + $("body").css("background-image").substr($("body").css("background-image").length-16, 10);
+                $(tapetaNazwa).attr("selected", "");
+            }
+
+            $("#wersjaSelect").change(function () {
+                if($(this).val() === "wlWersja") {
+                    $(".wersja").animate({
+                        "opacity": "100%"
+                    }, dlugoscAnimacji);
+                    $(".wersja").show();
+                } else {
+                    $(".wersja").animate({
+                        "opacity": "0%"
+                    }, dlugoscAnimacji);
+                    setTimeout(function() {
+                        $(".wersja").hide();
+                    }, dlugoscAnimacji);
+                    
+                }
+            });
         });
     </script>

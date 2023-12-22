@@ -1,4 +1,4 @@
-build = "Build 20231220_v0.48";
+build = "Build 20231222_v0.49";
 
 const dlugoscAnimacji = 250;
 var oknoIdtoggleOkna = 0;
@@ -540,7 +540,7 @@ $(document).ready(function () {
     $(document).on('contextmenu', function (e) {
         e.preventDefault();
     });
-    otworzOkno("terminal.app");
+    otworzOkno("ustawienia.app");
 });
 
 $(window).on('load', function () {

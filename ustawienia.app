@@ -1,17 +1,16 @@
 - tytul: "Ustawienia"
   ikona: "🛠️"
   resizable: "false"
-  maximize: "false"
   content: >
     <div class="content" style="display: flex; flex-direction: column">
         <div style=" width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
             <div style="font-size: 21px">Ustaw kolor wiodący:</div>
-            <input  style="margin-left: 100px;" type="color" id="kolorInput" value="#000000">
+            <input style="margin-left: 100px;" type="color" id="kolorInput">
         </div>
         <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
             <div style="font-size: 21px">Tryb wyświetlania:</div>
             <select style="margin-left: 100px;" id="modeSelect">
-                <option value="light">Jasny</option>
+                <option value="light" id='jasny'>Jasny</option>
                 <option value="dark" id='ciemny'>Ciemny</option>
             </select>
         </div>
@@ -46,107 +45,30 @@
                 <option value="wylWersja" id="wylWersja">Wyłącz</option>
             </select>
         </div>
+        <div style="width: 100%; border-bottom: 2px solid var(--kolor); margin: 20px 0 20px 0"></div>
+        <div style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+            <div style="font-size: 21px">Ustawienia fabryczne:</div>
+            <button style="margin-left: 100px;" id="ustawieniaFabryczne" onclick="ustawieniaFabryczne()">Przywróć</button>
+        </div>
     </div>
     <script>
-        $(document).ready(function() {
-            function pasekPozycja() {
-                $('[id^="oknoprzycisk"]').each(function () {
-                    oknoId = parseInt(this.id.substr(this.id.length - 1, 1));
+        ustawienia();
 
-                    var $przycisk = $('[id^="oknoprzycisk' + oknoId + '"]');
-                    var $blok = $('[id^="okno' + oknoId + '"]');
-                    
-                    if(!$("#oknoprzycisk" + oknoId).hasClass("pasekprzyciskOnScreen")) {
-                        $blok.css({
-                            left: $przycisk.position().left + ($przycisk.width()/2) - ($blok.width()/2) + "px",
-                            top: $(".pasekzadan").position().top + "px",
-                        });
-                    }
-                });
+        function ustawieniaFabryczne() {
+            function removeAllCookies() {
+            var cookies = document.cookie.split(";");
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
             }
 
-            var kolorInput = $("#kolorInput");
-
-            kolorInput.attr("value", $("body").css("--kolor"));
-            kolorInput.change(function() {
-                var nowyKolor = kolorInput.val();
-                $('body').css('--kolor', nowyKolor);
-            });
-
-            if(!$("body").hasClass("light")) {
-                $("#ciemny").attr("selected", "");
-            }
-            $('#modeSelect').change(function () {
-                if($(this).val() === "light") {
-                    $("body").addClass("light");
-                } else if($(this).val() === "dark") {
-                    $("body").removeClass("light");
-                }
-            });
-
-            $("#pasekSelect").change(function () {
-                var pasekzadan = $(".pasekzadan");
-                var pulpit = $(".pulpit");
-                if($(this).val() === "gora") {
-                    pasekzadan.after(pulpit);
-                    pasekzadan.removeClass("pasekzadanDol");
-                } else if($(this).val() === "dol") {
-                    pulpit.after(pasekzadan);
-                    pasekzadan.addClass("pasekzadanDol");
-                }
-                pasekPozycja();
-            });
-            if($(".pasekzadan").hasClass("pasekzadanDol")) {
-                $("#dol").attr("selected", "");
-            } else {
-                $("#gora").attr("selected", "");
-            }
-
-            $("#zegarSelect").change(function () {
-                if($(this).val() === "wlZegar") {
-                    $("#clock").show();
-                } else if($(this).val() === "wylZegar") {
-                    $("#clock").hide();
-                }
-            });
-            if($("#clock").css("display") === "none") {
-                $("#wylZegar").attr("selected", "");
-            } else {
-                $("#wlZegar").attr("selected", "");
-            }
-
-            $("#tapetaSelect").change(function () {
-                if($(this).val() === "nic") {
-                    $("body").css({
-                        "background-image": "none",
-                        "background-color": "#111111"
-                    });
-                } else {
-                    $("body").css("background-image", "url(./wallpaper/"+$(this).val()+")");
-                }
-            });
-            if($("body").css("background-image").substr($("body").css("background-image").length-5, 3) != "jpg") {
-                $("#nic").attr("selected", "");
-            } else {
-                tapetaNazwa = '#' + $("body").css("background-image").substr($("body").css("background-image").length-16, 10);
-                $(tapetaNazwa).attr("selected", "");
-            }
-
-            $("#wersjaSelect").change(function () {
-                if($(this).val() === "wlWersja") {
-                    $(".wersja").animate({
-                        "opacity": "100%"
-                    }, dlugoscAnimacji);
-                    $(".wersja").show();
-                } else {
-                    $(".wersja").animate({
-                        "opacity": "0%"
-                    }, dlugoscAnimacji);
-                    setTimeout(function() {
-                        $(".wersja").hide();
-                    }, dlugoscAnimacji);
-                    
-                }
-            });
-        });
+            removeAllCookies();
+            setTimeout(() => {
+                location.reload();
+            }, 250);
+        }
     </script>

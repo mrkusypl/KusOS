@@ -1,7 +1,8 @@
-build = "Build 20231222_v0.49";
+build = "Build 20231222_v0.51";
 
 const dlugoscAnimacji = 250;
 var oknoIdtoggleOkna = 0;
+let debounceTimer = null;
 
 var zindex = 1;
 var oknoXpos = [];
@@ -13,11 +14,11 @@ var oknoContent = [];
 $(document).on('keydown', handleShortcuts);
 
 function wolneId() {
-    var idWolne = 0;
+    let idWolne = 1;
 
-    do {
-        idWolne = idWolne + 1;
-    } while ($("#okno" + idWolne).length === 1);
+    while ($("#okno" + idWolne).length === 1) {
+        idWolne++;
+    }
 
     return idWolne;
 }
@@ -31,6 +32,7 @@ function closeModal(oknoId, min) {
     const $przycisk = $('[id^="oknoprzycisk' + oknoId + '"]');
     const $blok = $('[id^="okno' + oknoId + '"]');
     const $context = $('[id^="context-menuOkno' + oknoId + '"]');
+
     delete oknoContent[oknoId];
     $przycisk.removeClass("pasekprzyciskOnScreen");
     $blok.css({
@@ -38,32 +40,30 @@ function closeModal(oknoId, min) {
         "transform": "scale(0.9) rotateX(20deg)",
     });
     setClickState($blok, false);
-    setTimeout(function () {
-        $blok.hide();
-        $blok.css({
+
+    setTimeout(() => {
+        $blok.hide().css({
             "width": "",
             "height": ""
         });
     }, dlugoscAnimacji);
+
     if (min != 1) {
-        setTimeout(function () {
+        setTimeout(() => {
             $przycisk.css({
                 "transform": "scale(0.9) rotateX(20deg)"
             });
         }, 100);
-        $przycisk.empty();
-        $przycisk.animate({
+        $przycisk.empty().animate({
             "width": "0"
-        }, 200);
-        setClickState($przycisk, false);
-        setTimeout(function () {
+        }, 200, () => {
             $przycisk.hide();
-        }, dlugoscAnimacji);
+        });
+        setClickState($przycisk, false);
     }
-    setTimeout(function () {
-        $blok.remove();
-        $przycisk.remove();
-        $context.remove();
+
+    setTimeout(() => {
+        $blok.add($przycisk).add($context).remove();
     }, dlugoscAnimacji);
 }
 
@@ -71,29 +71,31 @@ function handleShortcuts(event) {
     const activeElement = document.activeElement;
     const isInput = activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA';
 
-    if (event.shiftKey && event.key === 'F4') {
-        if (typeof ($(".oknoActive").prop("id")) != "undefined") {
-            closeModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)), 0);
-            $(".context-menu").hide();
-        }
+    const oknoActiveId = $(".oknoActive").prop("id");
+
+    if (event.shiftKey && event.key === 'F4' && typeof oknoActiveId !== "undefined") {
+        closeModal(parseInt(oknoActiveId.substr(oknoActiveId.length - 1)), 0);
+        $(".context-menu").hide();
     }
-    else if (event.shiftKey && event.key === 'ArrowDown') {
-        if (typeof ($(".oknoActive").prop("id")) != "undefined") {
-            minimalizujModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)));
-            $(".context-menu").hide();
-        }
+    else if (event.shiftKey && event.key === 'ArrowDown' && typeof oknoActiveId !== "undefined") {
+        minimalizujModal(parseInt(oknoActiveId.substr(oknoActiveId.length - 1)));
+        $(".context-menu").hide();
     }
-    else if (event.shiftKey && event.key === 'ArrowUp') {
-        if (typeof ($(".oknoActive").prop("id")) != "undefined") {
-            maksymalizujModal(parseInt($(".oknoActive").prop("id").substr($(".oknoActive").prop("id").length - 1)));
-            $(".context-menu").hide();
-        }
+    else if (event.shiftKey && event.key === 'ArrowUp' && typeof oknoActiveId !== "undefined" && $(".oknoActive").attr("resizable") !== "false" && $(".oknoActive").hasClass("minimized")) {
+        maksymalizujModal(parseInt(oknoActiveId.substr(oknoActiveId.length - 1)));
+        $(".context-menu").hide();
     }
+
     if (isInput) {
         return;
     }
     else if (event.shiftKey && event.key.toLowerCase() === 'm') {
-        toggleOkna();
+        if (!debounceTimer) {
+            toggleOkna();
+            debounceTimer = setTimeout(() => {
+                debounceTimer = null;
+            }, dlugoscAnimacji);
+        }
         $(".context-menu").hide();
     }
     else if (event.key === 'Escape') {
@@ -108,7 +110,7 @@ function playSound(nazwa) {
 }
 
 function stworzOkno(dane) {
-    var { tytul, ikona, resizable, maximize, content } = dane;
+    var { tytul, ikona, resizable, content } = dane;
     oknoIlosc = wolneId();
 
     oknoContent[oknoIlosc] = content + tytul + resizable;
@@ -116,28 +118,28 @@ function stworzOkno(dane) {
 
     $(".pasekprzyciski").append("<div class='pasekprzycisk pasekprzyciskOnScreen' id='oknoprzycisk" + oknoIlosc + "' style='transform: scale(0.9) rotateX(20deg); 'onclick='minimalizujPrzycisk(" + oknoIlosc + ")'>" + ikona + " " + tytul + "</div>");
 
-    $(document).ready(function() {
+    $(document).ready(() => {
         $(".pasekprzyciski").sortable({
             axis: "x",
             containment: ".pasekprzyciski",
             tolerance: "pointer",
             revert: 50,
-            update: function(event, ui) {
+            update: (event, ui) => {
                 var changedItem = ui.item;
                 var newIndex = changedItem.index();
             },
         });
-      
+
         $(".przycisk").disableSelection();
-      });
-    var textDane = "<div id='okno" + oknoIlosc + "' class='okno resizable' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><line x1='3' x2='21' y1='21' y2='21'/></svg></div>";
-    if (maximize === "true") {
+    });
+    var textDane = "<div id='okno" + oknoIlosc + "' class='okno resizable minimized' onmousedown='fokus(" + oknoIlosc + ")' style='opacity: 0; transform: scale(0.9) rotateX(20deg); pointer-events: none; display: none;' resizable='" + resizable + "'><div class='pasek'><div class='pasekNazwa'><div class='pasekIkona'>" + ikona + "</div>" + tytul + "</div><div class='przelaczniki'><div class='button-pasek minimalizuj' title='Minimalizuj' onclick='minimalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><line x1='3' x2='21' y1='21' y2='21'/></svg></div>";
+    if (resizable === "true") {
         textDane += "<div class='button-pasek maksymalizuj' title='Maksymalizuj' onclick='maksymalizujModal(" + oknoIlosc + ")'><svg class='svgpasek' fill='none' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><rect height='18' rx='2' ry='2' width='18' x='3' y='3'/></svg></div>";
     }
     textDane += "<div class='button-pasek close' title='Zamnkij' onclick='closeModal(" + oknoIlosc + ", 0)'><svg class='svgpasek' fill='#eeeeee' height='24' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' viewBox='0 0 24 24' width='17' xmlns='http://www.w3.org/2000/svg'><line x1='22' x2='2' y1='3' y2='21'/><line x1='2' x2='22' y1='3' y2='21'/></svg></div></div></div>" + content + "</div>";
 
     textDane += "<div class='context-menu' id='context-menuOkno" + oknoIlosc + "'><div class='przyciskMenu minimalizujMenu' onclick='minimalizujModal(" + oknoIlosc + ")'><div class='minimalizujTekst'>Minimalizuj</div><div class='shortcut'>Shift + 🡇</div></div>";
-    if (maximize === "true") {
+    if (resizable === "true") {
         textDane += "<div class='przyciskMenu maksymalizujMenu' onclick='maksymalizujModal(" + oknoIlosc + ")'><div class='maksymalizujTekst'>Maksymalizuj</div><div class='shortcut'>Shift + 🡅</div></div>";
     }
 
@@ -183,7 +185,6 @@ function otworzOkno(nazwaYAML) {
                     "tytul": "Wystąpił błąd",
                     "ikona": "🛑",
                     "resizable": "false",
-                    "maximize": "false",
                     "content": "<div class='content'><span class='ikona'>🛑</span>Aplikacja " + nazwaYAML + " nie może zostać uruchomiona. Upewnij się, że nazwa programu jest prawidłowa i spróbuj ponownie.</div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
                 }];
 
@@ -193,13 +194,13 @@ function otworzOkno(nazwaYAML) {
     }
 
     wczytajDaneZYAML().then((dane) => {
-        dane.forEach(function (okno) {
-            oknoId = $.inArray(dane[0].content+dane[0].tytul+dane[0].resizable, oknoContent);
+        dane.forEach((okno) => {
+            oknoId = $.inArray(dane[0].content + dane[0].tytul + dane[0].resizable, oknoContent);
 
             if (oknoId === -1) {
                 stworzOkno(okno);
             } else {
-                if($("#oknoprzycisk" + oknoId).hasClass("pasekprzyciskOnScreen")) {
+                if ($("#oknoprzycisk" + oknoId).hasClass("pasekprzyciskOnScreen")) {
                     fokus(oknoId);
                 } else {
                     przywrocModal(oknoId);
@@ -247,7 +248,7 @@ function openModal(oknoId, przy) {
         });
         $przycisk.show();
         setClickState($przycisk, true);
-        setTimeout(function () {
+        setTimeout(() => {
             $przycisk.css({
                 "opacity": "100%",
                 "transform": "scale(1) rotateX(0deg)"
@@ -257,7 +258,7 @@ function openModal(oknoId, przy) {
     $blok.show();
     setClickState($blok, true);
     fokus(oknoId);
-    setTimeout(function () {
+    setTimeout(() => {
         $blok.css({
             "opacity": "100%",
             "transform": "scale(1) rotateX(0deg)"
@@ -274,7 +275,7 @@ function openModal(oknoId, przy) {
     }
     $("#okno" + oknoId).css("z-index", zindex);
 
-    $(document).ready(function () {
+    $(document).ready(() => {
         function showContextMenu(event) {
             event.preventDefault();
 
@@ -298,7 +299,7 @@ function openModal(oknoId, przy) {
                 "top": posY + "px",
             });
 
-            setTimeout(function () {
+            setTimeout(() => {
                 $context.css({
                     "opacity": "100%"
                 });
@@ -308,16 +309,16 @@ function openModal(oknoId, przy) {
         $("#okno" + oknoId + " .pasek").on("contextmenu", showContextMenu);
         $("#oknoprzycisk" + oknoId).on("contextmenu", showContextMenu);
 
-        $(".przyciskMenu").on("click", function (event) {
+        $(".przyciskMenu").on("click", (event) => {
             $(".context-menu").hide();
         })
 
-        $("#okno" + oknoId + " .pasek").on("dblclick", function () {
+        $("#okno" + oknoId + " .pasek").on("dblclick", () => {
             dblclickPasek(oknoId);
         });
     });
 
-    $(function () {
+    $(() => {
         $(".okno").draggable({ handle: ".pasek", cancel: ".button-pasek", scroll: false });
     });
 
@@ -373,7 +374,7 @@ function przywrocOkno(oknoId) {
     $blok.show();
     setClickState($blok, true);
     $przycisk.addClass("pasekprzyciskOnScreen");
-    setTimeout(function () {
+    setTimeout(() => {
         $blok.css({
             "opacity": "100%",
             "transform": "scale(1) rotateX(0deg)"
@@ -381,7 +382,7 @@ function przywrocOkno(oknoId) {
     }, 1);
     toggleModal(oknoId, "minimalizujPrzycisk(" + oknoId + ")");
 
-    setTimeout(function () {
+    setTimeout(() => {
         setClickState($przycisk, true);
     }, dlugoscAnimacji);
 
@@ -430,12 +431,12 @@ function minimalizujOkno(oknoId) {
     $przycisk.removeClass("pasekprzyciskActive");
     $przycisk.removeClass("pasekprzyciskOnScreen");
     setClickState($blok, false);
-    setTimeout(function () {
+    setTimeout(() => {
         $blok.hide();
     }, dlugoscAnimacji);
     toggleModal(oknoId, "przywrocPrzycisk(" + oknoId + ")");
 
-    setTimeout(function () {
+    setTimeout(() => {
         setClickState($przycisk, true);
     }, dlugoscAnimacji);
 
@@ -477,6 +478,7 @@ function maksymalizujModal(oknoId) {
     $("#context-menuOkno" + oknoId + " .maksymalizujMenu .shortcut").text("");
 
     $("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj svg").html("<rect height='13' rx='2' ry='2' width='13' x='9' y='9'/><path d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/>");
+    $blok.removeClass("minimized");
 }
 
 function przywrocNormalModal(oknoId) {
@@ -507,7 +509,7 @@ function przywrocNormalModal(oknoId) {
     $("#context-menuOkno" + oknoId + " .maksymalizujMenu .shortcut").text("Shift + 🡅");
 
     $("#okno" + oknoId + " .pasek .przelaczniki .maksymalizuj svg").html("<rect height='18' rx='2' ry='2' width='18' x='3' y='3'/>");
-
+    $blok.addClass("minimized");
 }
 
 function minimalizujPrzycisk(oknoId) {
@@ -536,20 +538,26 @@ function przywrocPrzycisk(oknoId) {
     toggleModal(oknoId, "minimalizujPrzycisk(" + oknoId + ")");
 }
 
-$(document).ready(function () {
-    $(document).on('contextmenu', function (e) {
+$(document).ready(() => {
+    $(document).on('contextmenu', (e) => {
         e.preventDefault();
     });
-    otworzOkno("ustawienia.app");
+    // otworzOkno("ustawienia.app");
 });
 
-$(window).on('load', function () {
-    $(".loading").css({
-        "opacity": "0%"
-    });
-    setTimeout(function () {
-        $(".loading").hide();
-    }, 200);
+$(window).on('load', () => {
+    setTimeout(() => {
+        closeModal(1, 0);
+    }, 150);
+    $(".loadingNapis").text("Zapraszamy");
+    setTimeout(() => {
+        $(".loading").css({
+            "opacity": "0%"
+        });
+        setTimeout(() => {
+            $(".loading").hide();
+        }, 200);
+    }, 250);
 });
 
 function toggleOkna() {
@@ -576,8 +584,8 @@ function fokus(oknoId) {
     }
 }
 
-$(document).ready(function () {
-    $(".pulpit").on("contextmenu", function (event) {
+$(document).ready(() => {
+    $(".pulpit").on("contextmenu", (event) => {
         event.preventDefault();
 
         var menu = $("#context-menuPulpit");
@@ -595,7 +603,7 @@ $(document).ready(function () {
             posY -= menuHeight;
         }
 
-        setTimeout(function () {
+        setTimeout(() => {
             $(".context-menu").css({
                 "opacity": "0%"
             });
@@ -609,16 +617,16 @@ $(document).ready(function () {
             "top": posY + "px",
         });
 
-        setTimeout(function () {
+        setTimeout(() => {
             menu.css({
                 "opacity": "100%"
             });
         }, 1);
     });
 
-    $(document).on("mousedown", function (event) {
+    $(document).on("mousedown", (event) => {
         if (!$(event.target).closest(".context-menu").length) {
-            setTimeout(function () {
+            setTimeout(() => {
                 $(".context-menu").css({
                     "opacity": "0%"
                 });
@@ -677,7 +685,7 @@ $(document).ready(function () {
     }
 
     setInterval(aktualizujDateGodzine, 1000);
-    $(document).ready(function () {
+    $(document).ready(() => {
         aktualizujDateGodzine();
     });
 
@@ -689,3 +697,179 @@ $(document).ready(function () {
 function zegarAnalogowy() {
     $("#clock").toggle();
 }
+
+function ustawienia() {
+    function pasekPozycja() {
+        $('[id^="oknoprzycisk"]').each(function () {
+            oknoId = parseInt(this.id.substr(this.id.length - 1, 1));
+
+            var $przycisk = $('[id^="oknoprzycisk' + oknoId + '"]');
+            var $blok = $('[id^="okno' + oknoId + '"]');
+
+            if (!$("#oknoprzycisk" + oknoId).hasClass("pasekprzyciskOnScreen")) {
+                $blok.css({
+                    left: $przycisk.position().left + ($przycisk.width() / 2) - ($blok.width() / 2) + "px",
+                    top: $(".pasekzadan").position().top + "px",
+                });
+            }
+        });
+    }
+
+    function kolorInputF() {
+        $('body').css('--kolor', $("#kolorInput").val());
+        document.cookie = "kolorInput =" + $("#kolorInput").val() + "; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/";
+    }
+
+    $("#kolorInput").change(() => {
+        kolorInputF();
+    });
+
+    function modeSelectF() {
+        if ($('#modeSelect').val() === "light") {
+            $("body").addClass("light");
+        } else if ($('#modeSelect').val() === "dark") {
+            $("body").removeClass("light");
+        }
+        document.cookie = "modeSelect=" + $('#modeSelect').val() + "; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/";
+    }
+
+    $('#modeSelect').change(function () {
+        modeSelectF();
+    });
+
+    function pasekSelectF() {
+        var pasekzadan = $(".pasekzadan");
+        var pulpit = $(".pulpit");
+        if ($("#pasekSelect").val() === "gora") {
+            pasekzadan.after(pulpit);
+            pasekzadan.removeClass("pasekzadanDol");
+        } else if ($("#pasekSelect").val() === "dol") {
+            pulpit.after(pasekzadan);
+            pasekzadan.addClass("pasekzadanDol");
+        }
+        document.cookie = "pasekSelect=" + $("#pasekSelect").val() + "; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/";
+        pasekPozycja();
+    }
+
+    $("#pasekSelect").change(function () {
+        pasekSelectF();
+    });
+
+    function zegarSelectF() {
+        if ($("#zegarSelect").val() === "wlZegar") {
+            $("#clock").show();
+        } else if ($("#zegarSelect").val() === "wylZegar") {
+            $("#clock").hide();
+        }
+        document.cookie = "zegarSelect=" + $("#zegarSelect").val() + "; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/";
+    }
+
+    $("#zegarSelect").change(function () {
+        zegarSelectF();
+    });
+
+    function tapetaSelectF() {
+        if ($("#tapetaSelect").val() === "nic") {
+            $("body").css({
+                "background-image": "none",
+                "background-color": "#111111"
+            });
+        } else {
+            $("body").css("background-image", "url(./wallpaper/" + $("#tapetaSelect").val() + ")");
+        }
+        document.cookie = "tapetaSelect=" + $("#tapetaSelect").val() + "; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/";
+    }
+
+    $("#tapetaSelect").change(function () {
+        tapetaSelectF();
+    });
+
+    function wersjaSelectF() {
+        if ($("#wersjaSelect").val() === "wlWersja") {
+            $(".wersja").animate({
+                "opacity": "100%"
+            }, dlugoscAnimacji);
+            $(".wersja").show();
+        } else {
+            $(".wersja").animate({
+                "opacity": "0%"
+            }, dlugoscAnimacji);
+            setTimeout(() => {
+                $(".wersja").hide();
+            }, dlugoscAnimacji);
+        }
+        document.cookie = "wersjaSelect=" + $("#wersjaSelect").val() + "; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/";
+    }
+
+    $("#wersjaSelect").change(function () {
+        wersjaSelectF();
+    });
+
+    var kolorInput = getCookie("kolorInput");
+    var modeSelect = getCookie("modeSelect");
+    var pasekSelect = getCookie("pasekSelect");
+    var zegarSelect = getCookie("zegarSelect");
+    var tapetaSelect = getCookie("tapetaSelect");
+    var wersjaSelect = getCookie("wersjaSelect");
+
+    $('#kolorInput').val(kolorInput);
+    $('#modeSelect').val(modeSelect);
+    $('#pasekSelect').val(pasekSelect);
+    $('#zegarSelect').val(zegarSelect);
+    $('#tapetaSelect').val(tapetaSelect);
+    $('#wersjaSelect').val(wersjaSelect);
+
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+    }
+
+    if(kolorInput != null) kolorInputF();
+    if(modeSelect != null) modeSelectF();
+    if(pasekSelect != null) pasekSelectF();
+    if(zegarSelect != null) zegarSelectF();
+    if(tapetaSelect != null) tapetaSelectF();
+    if(wersjaSelect != null) wersjaSelectF();
+
+    $("#kolorInput").val($("body").css("--kolor"));
+
+    if ($(".pasekzadan").hasClass("pasekzadanDol")) {
+        $("#dol").attr("selected", "");
+    } else {
+        $("#gora").attr("selected", "");
+    }
+
+    if (!$("body").hasClass("light")) {
+        $("#ciemny").attr("selected", "");
+    } else {
+        $("#jasny").attr("selected", "");
+    }
+
+    if ($("#clock").css("display") === "none") {
+        $("#wylZegar").attr("selected", "");
+    } else {
+        $("#wlZegar").attr("selected", "");
+    }
+
+    if ($("body").css("background-image").substr($("body").css("background-image").length - 5, 3) != "jpg") {
+        $("#nic").attr("selected", "");
+    } else {
+        tapetaNazwa = '#' + $("body").css("background-image").substr($("body").css("background-image").length - 16, 10);
+        $(tapetaNazwa).attr("selected", "");
+    }
+
+    if ($(".wersja").css("display") === "none") {
+        $("#wylWersja").attr("selected", "");
+    } else {
+        $("#wlWersja").attr("selected", "");
+    }
+}
+
+$(document).ready(() => {
+    otworzOkno("ustawienia.app");
+});

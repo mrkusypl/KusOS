@@ -1,7 +1,6 @@
 - tytul: "Terminal"
   ikona: "⌨️"
   resizable: "true"
-  maximize: "true"
   content: >
     <div style="background-color: #111; height: calc(100% - 43px);">
     <div style="padding: 10px 10px 0 10px; min-height: 300px; overflow-wrap: normal; overflow: auto; color: #eeeeee">
@@ -10,7 +9,7 @@
     </div>
     </div>
     <script>
-    $(document).ready(function() {
+    $(document).ready(() => {
       var consoleDiv = $('#console');
       var commandInput = $('#commandInput');
       var commandHistory = [];
@@ -47,7 +46,7 @@
 
       appendToConsole("<span style='font-size: 19px'><span style='font-weight: bold'>KusOS</span>  <span class='build'>"+build+"</span></span></br>");
 
-      commandInput.keydown(function(e) {
+      commandInput.keydown((e) => {
         if (e.which === 38) {
           if (historyIndex > 0) {
             historyIndex--;
@@ -64,7 +63,7 @@
         }
       });
 
-      commandInput.keypress(function(e) {
+      commandInput.keypress((e) => {
         if (e.which === 13) {
           var command = commandInput.val();
           commandInput.val('');

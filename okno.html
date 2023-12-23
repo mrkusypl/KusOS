@@ -34,11 +34,13 @@
     <style>
         body {
             position: fixed;
+            background-color: #111111;
             background-image: url(./wallpaper/wallpaper1.jpg);
             background-position-x: center;
             background-position-y: center;
             background-size: auto;
             background-attachment: fixed;
+            transition: background-image 0.5s, background-color 0.5s;
             color: #eeeeee;
             font-family: Tahoma, sans-serif;
             font-size: 14px;
@@ -55,7 +57,7 @@
         .loading {
             display: flex;
             position: absolute;
-            background-color: black;
+            background-color: #111111;
             width: 100%;
             height: 100%;
             z-index: 999;

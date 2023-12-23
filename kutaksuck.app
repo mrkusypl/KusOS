@@ -1,7 +1,6 @@
 - tytul: "Kółko i krzyżyk"
   ikona: "🎮"
   resizable: "false"
-  maximize: "false"
   content: >
     <div class="content">
     <script>
@@ -68,7 +67,7 @@
               "content": "<div class='content'><span style='font-size: 20px;'>Wygrałeś! 😀</span></div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
           }];
 
-          setTimeout( function () {
+          setTimeout(() => {
             dane.forEach((okno) => stworzOkno(okno));
           }, 250);
         }
@@ -83,7 +82,7 @@
               "content": "<div class='content'><span style='font-size: 20px;'>Przegrałeś! 😒</span></div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
           }];
 
-          setTimeout( function () {
+          setTimeout(() => {
             dane.forEach((okno) => stworzOkno(okno));
           }, 250);
         }
@@ -97,7 +96,7 @@
               "content": "<div class='content'><span style='font-size: 20px;'>Remis! 😐</span></div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
           }];
 
-          setTimeout( function () {
+          setTimeout(() => {
             dane.forEach((okno) => stworzOkno(okno));
           }, 250);
         }

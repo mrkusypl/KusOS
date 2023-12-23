@@ -471,7 +471,7 @@ input[type="color"]::-moz-color-swatch:active {
     border: 3px solid #eeeeeee7;
 }
 
-select {
+select, button {
     border: 1px solid #eeeeee;
     background-color: #3d3d3d;
     border-radius: 5px;
@@ -482,10 +482,30 @@ select {
     color: #eeeeee;
 }
 
-.light select {
+.light select, .light button {
     border: 1px solid #111111;
     background-color: inherit;
     color: #111111;
+}
+
+select:hover, button:hover {
+    transition: background-color 200ms;
+    background-color: #5f5f5f;
+}
+
+select:active, button:active {
+    transition: background-color 50ms;
+    background-color: #777777;
+}
+
+.light select:hover, .light button:hover {
+    transition: background-color 200ms;
+    background-color: #dddddd;
+}
+
+.light select:active, .light button:active {
+    transition: background-color 50ms;
+    background-color: rgb(167, 167, 167);
 }
 
 .build {

@@ -78,15 +78,172 @@
             font-size: 30px;
             margin-top: 30px;
         }
+
+        .box {
+            box-sizing: border-box;
+            display: flex;
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            animation: intro 1s linear, pulsowanie 3s cubic-bezier(0.32,-0.09, 0.55, 0.92) 1s infinite;
+        }
+
+        .box-border {
+            box-sizing: border-box;
+            display: flex;
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            float: left;
+            z-index: 5;
+            border: 15px solid #0a0a0a;
+        }
+
+        .box-content {
+            box-sizing: border-box;
+            display: flex;
+            background-color: #484e69;
+            width: 500px;
+            z-index: 1;
+        }
+
+        .img-logo {
+            box-sizing: border-box;
+            float: right;
+            margin-right: 50px;
+        }
+
+        .kusOS-text {
+            box-sizing: border-box;
+            transform: scale(0);
+            display: flex;
+            font-family: Verdana;
+            font-size: 190px;
+            color: #eeeeee;
+            overflow: hidden;
+            user-select: none;
+            position: absolute;
+            letter-spacing: -16px;
+            margin: 295px 0 0 -15px;
+            width: 510px;
+            z-index: 4;
+        }
+
+        .img-turtle {
+            box-sizing: border-box;
+            transform: scale(0);
+            position: absolute;
+            z-index: 4;
+            margin-top: 70px;
+            margin-left: 50px;
+        }
+
+        .animacjalogo {
+            animation: turtle 0.5s forwards;
+            animation-delay: 1s;
+        }
+
+        @keyframes intro {
+            0% {
+                transform: rotate(0) scale(0);
+            }
+
+            25% {
+                transform: rotate(0.5turn) scale(0);
+            }
+
+            50% {
+                transform: rotate(1turn) scale(0.3);
+            }
+
+            75% {
+                transform: rotate(1.5turn) scale(0.6);
+            }
+
+            100% {
+                transform: rotate(2turn) scale(1);
+            }
+        }
+
+        @keyframes turtle {
+            0% {
+                transform: scale(0);
+                filter: drop-shadow(0 0 100px #00000036);
+            }
+
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 0px #00000036);
+            }
+        }
+
+        @keyframes pulsowanie {
+            0% {
+                transform: scale(0.96);
+                filter: drop-shadow(0 0 0px #ffffff00);
+            }
+
+            50% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 100px #ffffff36);
+            }
+
+            100% {
+                transform: scale(0.96);
+                filter: drop-shadow(0 0 0px #ffffff00);
+            }
+        }
+
+        .logo {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: #000000;
+            box-sizing: border-box;
+        }
+
+        .znikanie {
+            animation: znikanie 1s forwards;
+        }
+
+        @keyframes znikanie {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(0);
+            }
+        }
     </style>
 </head>
 
 <body class="light">
-    <div class="loading">
-        <img src="./kusOSlogoSVG.svg" />
-        <div class="loadingNapis">
-            Trwa ładowanie
+    <div class="loading loading-intro">
+        <div class="logo">
+            <div class="box">
+                <div class="box-content">
+                    <svg class="img-turtle animacjalogo" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" id="body_1" width="320" height="320">
+                        <g transform="matrix(0.8000001 0 0 0.8000001 0 0)">
+                            <path
+                                d="M167.798 57.609C 151.92 60.943 138.08301 66.547 138.26001 69.57C 138.488 73.477 141.05501 90.227 141.477 90.56C 141.696 90.732994 150.875 94.698 161.875 99.369995C 183.607 108.602 206.539 119.73799 217.856 126.55499C 224.533 130.577 225.461 130.801 231.571 129.874C 247.315 127.482994 274.269 126.173996 291.314 126.97299L291.314 126.97299L309.503 127.82599L314.151 117.65699C 322.82 98.69399 322.214 95.43199 308.255 85.92699C 272.027 61.257988 209.98401 48.748985 167.798 57.608986M114.67 80.824C 103.514 88.318 81.757996 109.037994 82.976 111.007996C 83.483 111.828995 85.410995 112.503 87.261 112.506996C 89.111 112.510994 92.748 113.103 95.342 113.824C 100.051 115.131996 100.075005 115.118996 110.593 105.759995C 116.388 100.604996 122.615005 95.413994 124.431 94.22299C 127.545 92.18299 127.684 91.66999 126.877 85.20899C 125.359 73.06199 125.922 73.26399 114.67 80.82399M129.465 107.42799C 113.451 120.15499 113.131996 120.81999 120.95599 125.15299C 140.174 135.797 158.198 157.93799 168.65599 183.75C 171.831 191.584 173.87498 194.461 181.094 201.25C 185.845 205.719 191.902 212.144 194.554 215.528C 199.617 221.99 208.918 228.75 212.745 228.75C 214.87599 228.75 215 226.324 214.996 184.688L214.996 184.688L214.992 140.625L204.683 134.737C 187.66699 125.017 140.27701 103.75 135.633 103.75C 134.787 103.75 132.011 105.405 129.465 107.428M330.556 112.813C 330.081 114.359 327.761 119.883 325.4 125.088005L325.4 125.088005L321.107 134.55101L326.82 143.21301C 333.73502 153.69801 343.703 173.80301 347.69202 185.31302C 351.21503 195.47702 350.72803 195.41402 358.67102 186.72401C 368.89902 175.53201 369.61002 173.48901 366.19403 165.1C 358.71103 146.725 348.04602 127.98801 337.85403 115.313C 332.99002 109.263 331.77203 108.846 330.55603 112.813M51.488 124.944C 17.906 134.062 -0.026 160.28 0.021 200.192C 0.100999996 267.023 43.622 296.302 143.535 296.741C 181.515 296.908 178.03601 299.753 177.004 269.375C 173.703 172.16 117.172 107.11 51.488 124.944M253.75 141.186C 247.219 141.73201 238.922 142.585 235.313 143.082L235.313 143.082L228.75 143.985L228.75 231.62201L242.813 230.89201C 274.598 229.24202 338.75 209.84702 338.75 201.88802C 338.75 195.91101 323.111 161.62701 314.654 149.06302L314.654 149.06302L309.395 141.25002L300.517 141.25002C 295.634 141.25002 285.786 141.01201 278.632 140.72202C 271.478 140.43102 260.28098 140.64001 253.74998 141.18602M385.03998 161.11502C 379.90598 163.76302 375.21198 166.71101 374.60898 167.66702C 372.89297 170.38902 381.25198 186.77502 384.60397 187.25902C 391.63297 188.27402 404.41397 159.46101 398.02298 157.00902C 395.132 155.89902 395.188 155.88202 385.03998 161.11502M45.59897 165.48502C 54.63197 174.51802 48.04897 191.50002 35.51397 191.50002C 22.99697 191.50002 19.24997 172.17001 30.27097 164.45102C 34.571968 161.43802 42.05697 161.94302 45.59897 165.48502M107.52496 164.38802C 116.50296 169.03102 118.175964 183.83702 110.412964 189.94302C 102.091 196.49 90 189.527 90 178.188C 90 165.64 97.906 159.414 107.525 164.388M365.625 199.176C 348.406 216.853 318.701 230.914 282.5 238.525C 232.315 249.07599 208.107 247.28099 191.35199 231.769C 183.76399 224.744 181.68098 223.562 183.01599 227.041C 184.26399 230.295 187.614 252.201 188.53299 263.125L188.53299 263.125L189.37498 273.125L213.74998 273.482C 270.11298 274.30798 323.761 259.608 365.50897 231.898C 377.98996 223.61299 381.32498 212.873 376.48096 196.56299C 374.51196 189.93098 374.66696 189.89299 365.62497 199.176M41.222 213.102C 50.916 221.201 54.499 221.38101 67.922 214.447C 79.175995 208.63301 83.614 207.71 84.695 210.957C 85.998 214.872 64.051 231.25 57.502 231.25C 49.861 231.25 32.5 218.322 32.5 212.631C 32.5 207.51399 34.675 207.631 41.222 213.10199M347.5 259.551C 340.281 262.681 329.627 267.023 323.825 269.202C 311.52502 273.82 310.46902 275.647 311.66 290.249C 312.908 305.538 317.533 308.67798 338.863 308.723C 374.36002 308.796 383.146 301.58298 376.937 277.464C 370.34302 251.85098 368.23 250.56499 347.5 259.551M191.644 290.009C 184.273 292.979 177.29 328.964 182.189 338.733C 185.56299 345.459 188.314 346.211 209.62599 346.232C 249.16998 346.27 252.392 342.896 243.963 310.275C 239.979 294.856 238.138 291.893 231.375 290.014C 225.88 288.487 195.43 288.483 191.644 290.009M38.317 291.826C 36.588 296.331 34.818 317.102 35.618 323.50198C 37.215 336.28497 41.892 338.10898 71.009 337.31C 98.561005 336.553 103.644 332.819 101.935005 314.587L101.935005 314.587L101.037 305L96.773 305C 89.885 305 65.244 299.298 53.750004 295.045C 38.704002 289.47702 39.180004 289.57602 38.317005 291.82602"
+                                stroke="none" fill="#000000" fill-rule="nonzero" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="kusOS-text animacjalogo">kusOS</div>
+                <div class="box-border"></div>
+            </div>
         </div>
+    </div>
+
+    <div class="loading loading-blad" style="opacity: 0; display: none;">
+        <img src="./kusOSlogoSVG.svg">
+        <div class="loadingNapis"></div>
     </div>
 
     <audio id="audio">
@@ -126,6 +283,107 @@
         <div class="przyciskMenu" onclick="otworzOkno('kutaksuck.app')">🎮 Kółko i krzyżyk</div>
         <div class="przyciskMenu" onclick="otworzOkno('terminal.app')">⌨️ Terminal</div>
         <div class="przyciskMenu" onclick="otworzOkno('debug.app')">🍀 Debug</div>
+    </div>
+    <div id="okno1" class="okno resizable minimized ui-draggable oknoActive" onmousedown="fokus(1)"
+        style="opacity: 1; transform: scale(1) rotateX(0deg); pointer-events: auto; left: 432.39px; top: 216px; z-index: 7;"
+        resizable="false">
+        <div class="pasek ui-draggable-handle">
+            <div class="pasekNazwa">
+                <div class="pasekIkona">🛠️</div>Ustawienia
+            </div>
+            <div class="przelaczniki">
+                <div class="button-pasek minimalizuj" title="Minimalizuj" onclick="minimalizujModal(1)"><svg
+                        class="svgpasek" fill="#eeeeee" height="24" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="17"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <line x1="3" x2="21" y1="21" y2="21"></line>
+                    </svg></div>
+                <div class="button-pasek close" title="Zamnkij" onclick="closeModal(1, 0)"><svg class="svgpasek"
+                        fill="#eeeeee" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" viewBox="0 0 24 24" width="17" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="22" x2="2" y1="3" y2="21"></line>
+                        <line x1="2" x2="22" y1="3" y2="21"></line>
+                    </svg></div>
+            </div>
+        </div>
+        <div class="content" style="display: flex; flex-direction: column">
+            <div
+                style=" width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 21px">Ustaw kolor wiodący:</div>
+                <input style="margin-left: 100px;" type="color" id="kolorInput">
+            </div>
+            <div
+                style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 21px">Tryb wyświetlania:</div>
+                <select style="margin-left: 100px;" id="modeSelect">
+                    <option value="light" id="jasny">Jasny</option>
+                    <option value="dark" id="ciemny" selected="selected">Ciemny</option>
+                </select>
+            </div>
+            <div
+                style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 21px">Pozycja paska:</div>
+                <select style="margin-left: 100px;" id="pasekSelect">
+                    <option value="gora" id="gora">Góra</option>
+                    <option value="dol" id="dol" selected="selected">Dół</option>
+                </select>
+            </div>
+            <div
+                style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 21px">Zegar analogowy:</div>
+                <select style="margin-left: 100px;" id="zegarSelect">
+                    <option value="wylZegar" id="wylZegar" selected="selected">Wyłącz</option>
+                    <option value="wlZegar" id="wlZegar">Włącz</option>
+                </select>
+            </div>
+            <div
+                style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 21px">Tapeta:</div>
+                <select style="margin-left: 100px;" id="tapetaSelect">
+                    <option value="wallpaper1.jpg" id="wallpaper1" selected="selected">kusOS</option>
+                    <option value="wallpaper2.jpg" id="wallpaper2">Tutel</option>
+                    <option value="wallpaper3.jpg" id="wallpaper3">Pracownik</option>
+                    <option value="wallpaper4.jpg" id="wallpaper4">Pływak</option>
+                    <option value="nic" id="nic">Nic</option>
+                </select>
+            </div>
+            <div
+                style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 21px">Wyświetl wersję systemu:</div>
+                <select style="margin-left: 100px;" id="wersjaSelect">
+                    <option value="wlWersja" id="wlWersja" selected="selected">Włącz</option>
+                    <option value="wylWersja" id="wylWersja">Wyłącz</option>
+                </select>
+            </div>
+            <div style="width: 100%; border-bottom: 2px solid var(--kolor); margin: 20px 0 20px 0"></div>
+            <div
+                style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 21px">Ustawienia fabryczne:</div>
+                <button style="margin-left: 100px;" id="ustawieniaFabryczne"
+                    onclick="ustawieniaFabryczne()">Przywróć</button>
+            </div>
+        </div>
+        <script>
+            ustawienia();
+
+            function ustawieniaFabryczne() {
+                function deleteAllCookies() {
+                    var cookies = document.cookie.split(";");
+
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i];
+                        var eqPos = cookie.indexOf("=");
+                        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                    }
+                }
+
+                deleteAllCookies();
+                setTimeout(() => {
+                    location.reload();
+                }, 250);
+            }
+        </script>
     </div>
 </body>
 

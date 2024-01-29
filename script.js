@@ -1,8 +1,10 @@
-build = "Build 20231222_v0.51";
+build = "Build 20240129_ReleaseCandidate";
 
 const dlugoscAnimacji = 250;
 var oknoIdtoggleOkna = 0;
 let debounceTimer = null;
+var czyZaladowane = false;
+var czyAnimacja = false;
 
 var zindex = 1;
 var oknoXpos = [];
@@ -176,8 +178,8 @@ function otworzOkno(nazwaYAML) {
                 $("body").css("cursor", "auto");
                 $("body").hide().show(0);
                 $(".loadingNapis").text("Wystąpił błąd krytyczny");
-                $(".loading").show();
-                $(".loading").css({
+                $(".loading-blad").show();
+                $(".loading-blad").css({
                     "opacity": "100%"
                 });
             } else {
@@ -545,19 +547,36 @@ $(document).ready(() => {
     // otworzOkno("ustawienia.app");
 });
 
-$(window).on('load', () => {
-    setTimeout(() => {
-        closeModal(1, 0);
-    }, 150);
-    $(".loadingNapis").text("Zapraszamy");
-    setTimeout(() => {
-        $(".loading").css({
-            "opacity": "0%"
-        });
+function czyZaladowaneOrazAnimacja() {
+    if(czyZaladowane && czyAnimacja) {
         setTimeout(() => {
-            $(".loading").hide();
-        }, 200);
-    }, 250);
+            closeModal(1, 0);
+        }, 0);
+        setTimeout(() => {
+            $(".loading-intro").css({
+                "opacity": "0%"
+            });
+            $(".box").addClass("znikanie");
+            setTimeout(() => {
+                $(".loading-intro").hide();
+                setTimeout(() => {
+                    $(".loading-intro").remove();
+                }, 200);
+            }, 200);
+        }, 250);
+    }
+}
+
+$(document).ready(() => {
+    $(".kusOS-text").on("animationend", () => {
+        czyAnimacja = true;
+        czyZaladowaneOrazAnimacja();
+    });
+})
+
+$(window).on("load", function () {
+    czyZaladowane = true;
+    czyZaladowaneOrazAnimacja();
 });
 
 function toggleOkna() {
@@ -869,7 +888,3 @@ function ustawienia() {
         $("#wlWersja").attr("selected", "");
     }
 }
-
-$(document).ready(() => {
-    otworzOkno("ustawienia.app");
-});

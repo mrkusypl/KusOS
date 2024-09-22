@@ -1,4 +1,4 @@
-build = "v 1.0 Final Version";
+build = "Final Version";
 
 const dlugoscAnimacji = 250;
 var oknoIdtoggleOkna = 0;

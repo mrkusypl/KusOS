@@ -1,4 +1,4 @@
-build = "Build 20240129_ReleaseCandidate";
+build = "v 1.0 Final Version";
 
 const dlugoscAnimacji = 250;
 var oknoIdtoggleOkna = 0;

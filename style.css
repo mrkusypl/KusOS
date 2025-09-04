@@ -1,5 +1,5 @@
 body {
-    --kolor: #3d3d3d;
+    --kolor: #1b6ac5;
 }
 
 .light {
@@ -19,6 +19,11 @@ body {
     transition: opacity 200ms, transform 300ms, background-color 200ms, border-color 100ms;
     z-index: 1000;
     position: absolute;
+}
+
+.context-menu {
+    display: flex;
+    gap: 5px;
 }
 
 .okno {
@@ -48,13 +53,14 @@ body {
     height: 30px;
     padding-left: 5px;
     border: 1px solid rgb(71, 71, 71);
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
     justify-content: space-between;
 }
 
 .przyciskMenu {
     background-color: #424242;
     border-radius: 4px;
+    padding-right: 10px;
     color: #eeeeee;
 }
 
@@ -273,6 +279,13 @@ body {
     background-color: var(--kolor);
 }
 
+/* Style dla animacji paska zadań */
+.pasek-animating {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
 .zegar {
     display: grid;
     justify-items: flex-end;
@@ -343,6 +356,94 @@ button {
     height: calc(100% - 50px);
 }
 
+/* Style ikon pulpitu */
+.desktop-icon {
+    position: absolute;
+    width: 80px;
+    height: 100px;
+    display: flex;
+    border: 2px solid rgba(0, 0, 0, 0);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    padding: 10px;
+    z-index: 0;
+}
+
+.desktop-icon.icon-appearing {
+    animation: iconAppear 0.5s ease-out;
+}
+
+@keyframes iconAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.desktop-icon:hover {
+    background-color: color-mix(in srgb, var(--kolor) 20%, transparent);
+    border: 2px solid var(--kolor);
+    transform: scale(1.0);
+}
+
+.desktop-icon:active {
+    background-color: color-mix(in srgb, var(--kolor) 40%, transparent);
+    border: 2px solid var(--kolor);
+    transform: scale(0.98);
+}
+
+.desktop-icon.clicked {
+    background-color: color-mix(in srgb, var(--kolor) 30%, transparent);
+    border: 2px solid var(--kolor);
+    transform: scale(0.98);
+    transition: all 0.1s ease;
+}
+
+.desktop-icon.dragging {
+    opacity: 0.8;
+    transform: scale(1.1);
+    transition: none !important; /* Wyłącz transitions podczas przeciągania */
+}
+
+.icon-emoji {
+    font-size: 48px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.icon-label {
+    font-size: 12px;
+    text-align: center;
+    color: #ffffff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    line-height: 1.2;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+/* Style dla trybu jasnego */
+.light .icon-label {
+    color: #ffffff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Style dla menu kontekstowego ikon */
+.icon-context-menu {
+    z-index: 1001;
+}
+
+.icon-context-menu .przyciskMenu {
+    min-width: 200px;
+}
+
 .wersja {
     position: absolute;
     bottom: 0;
@@ -362,6 +463,8 @@ button {
     filter: contrast(0.5);
     cursor: pointer;
 }
+
+
 
 .toggleOkna {
     background-color: #ffffff23;
@@ -508,9 +611,6 @@ select:active, button:active {
     background-color: rgb(167, 167, 167);
 }
 
-.build {
-    color: #bbb;
-}
 
 * {
     scrollbar-width: thin;

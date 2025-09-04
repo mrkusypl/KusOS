@@ -64,7 +64,7 @@
               "ikona": "🎮",
               "resizable": "false",
               "maximize": "false",
-              "content": "<div class='content'><span style='font-size: 20px;'>Wygrałeś! 😀</span></div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
+              "content": "<div class='content'><span style='font-size: 20px; color: #000000; text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.8), 1px -1px 2px rgba(255, 255, 255, 0.8), -1px 1px 2px rgba(255, 255, 255, 0.8);'>Wygrałeś! 😀</span></div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
           }];
 
           setTimeout(() => {
@@ -79,7 +79,7 @@
               "ikona": "🎮",
               "resizable": "false",
               "maximize": "false",
-              "content": "<div class='content'><span style='font-size: 20px;'>Przegrałeś! 😒</span></div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
+              "content": "<div class='content'><span style='font-size: 20px; color: #000000; text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.8), 1px -1px 2px rgba(255, 255, 255, 0.8), -1px 1px 2px rgba(255, 255, 255, 0.8);'>Przegrałeś! 😒</span></div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
           }];
 
           setTimeout(() => {
@@ -93,7 +93,7 @@
               "ikona": "🎮",
               "resizable": "false",
               "maximize": "false",
-              "content": "<div class='content'><span style='font-size: 20px;'>Remis! 😐</span></div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
+              "content": "<div class='content'><span style='font-size: 20px; color: #000000; text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.8), 1px -1px 2px rgba(255, 255, 255, 0.8), -1px 1px 2px rgba(255, 255, 255, 0.8);'>Remis! 😐</span></div><div class='przyciski'><div id='OK' class='przycisk' onclick='closeModal(" + oknoIlosc + ")'>OK</div></div>"
           }];
 
           setTimeout(() => {
@@ -150,7 +150,7 @@
             klikniete.push(place)
             if (count <= 9) {
                 if (count % 2 == 0) {
-                    $("#td_" + place).html("<svg style='width: 97%; display: flex; margin: auto;' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'><path fill-rule='evenodd' clip-rule='evenodd' d='M19.207 6.207a1 1 0 0 0-1.414-1.414L12 10.586 6.207 4.793a1 1 0 0 0-1.414 1.414L10.586 12l-5.793 5.793a1 1 0 1 0 1.414 1.414L12 13.414l5.793 5.793a1 1 0 0 0 1.414-1.414L13.414 12l5.793-5.793z' fill='#000000'></path></g></svg>");
+                    $("#td_" + place).html("<svg style='width: 97%; display: flex; margin: auto;' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'><path fill-rule='evenodd' clip-rule='evenodd' d='M19.207 6.207a1 1 0 0 0-1.414-1.414L12 10.586 6.207 4.793a1 1 0 0 0-1.414 1.414L10.586 12l-5.793 5.793a1 1 0 1 0 1.414 1.414L12 13.414l5.793 5.793a1 1 0 0 0 1.414-1.414L13.414 12l5.793-5.793z' fill='#eeeeee' stroke='#ffffff' stroke-width='0.5'></path></g></svg>");
                     document.getElementById("td_" + place).className = "x_img";
                     document.getElementById("td_" + place).removeAttribute("onclick");
 
@@ -168,7 +168,7 @@
                 }
                 else {
 
-                    $("#td_" + place).html("<svg style='width: 97%; display: flex; margin: auto;' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'><circle cx='12' cy='12' r='7' stroke='black' stroke-width='2' fill='none' /></g></svg>");
+                    $("#td_" + place).html("<svg style='width: 97%; display: flex; margin: auto;' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'><circle cx='12' cy='12' r='7' stroke='#ffffff' stroke-width='2' fill='none' /></g></svg>");
                     document.getElementById("td_" + place).className = "x_img";
                     document.getElementById("td_" + place).removeAttribute("onclick");
                     if (place < 4) {
@@ -199,8 +199,58 @@
             </script>
         </div>
         <div class='przyciski' style="display: flex; justify-content: space-between;">
-        <div class='przycisk' style="margin-left: 0; width: 50%; font-size: 30px; height: 50px" onclick="autorzy();">Autorzy</div>
-        <div class='przycisk' style="margin-right: 0; width: 50%; font-size: 30px; height: 50px"" onclick="reset();">Reset</div>
+        <div class='przycisk' style="margin-left: 0; width: 50%; font-size: 30px; height: 50px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);" onclick="autorzy();">Autorzy</div>
+        <div class='przycisk' style="margin-right: 0; width: 50%; font-size: 30px; height: 50px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);" onclick="reset();">Reset</div>
         </div>
     </div>
     </div>
+    
+    <style>
+        /* Style dla trybu jasnego */
+        .light .przycisk {
+            color: #eeeeee !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+        }
+        
+        /* Style dla trybu ciemnego - zachowaj obecne */
+        .przycisk {
+            color: #eeeeee;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+        
+        /* Style dla symboli gry w trybie jasnym */
+        .light .x_img svg path {
+            fill: #333333 !important;
+            stroke: #000000 !important;
+            filter: drop-shadow(0 0 0.5px #ffffff) drop-shadow(0 0 0.5px #ffffff) drop-shadow(0 0 0.5px #ffffff) drop-shadow(0 0 0.5px #ffffff);
+        }
+        
+        .light .x_img svg circle {
+            stroke: #000000 !important;
+            filter: drop-shadow(0 0 0.5px #ffffff) drop-shadow(0 0 0.5px #ffffff) drop-shadow(0 0 0.5px #ffffff) drop-shadow(0 0 0.5px #ffffff);
+        }
+        
+        /* Style dla symboli gry w trybie ciemnym */
+        .x_img svg path {
+            fill: #eeeeee;
+            stroke: #ffffff;
+            filter: drop-shadow(0 0 0.5px #000000) drop-shadow(0 0 0.5px #000000) drop-shadow(0 0 0.5px #000000) drop-shadow(0 0 0.5px #000000);
+        }
+        
+        .x_img svg circle {
+            stroke: #ffffff;
+            filter: drop-shadow(0 0 0.5px #000000) drop-shadow(0 0 0.5px #000000) drop-shadow(0 0 0.5px #000000) drop-shadow(0 0 0.5px #000000);
+        }
+        
+        /* Style dla komunikatów po końcu gry w trybie jasnym */
+        .light .content span {
+            color: #000000 !important;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.8), 1px -1px 2px rgba(255, 255, 255, 0.8), -1px 1px 2px rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        /* Style dla komunikatów po końcu gry w trybie ciemnym */
+        .content span {
+            color: #ffffff !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+        }
+    </style>

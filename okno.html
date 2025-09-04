@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>KusOS - wersja demonstracyjna</title>
+    <title>KusOS</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
         integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
@@ -77,6 +77,7 @@
         .loading .loadingNapis {
             font-size: 30px;
             margin-top: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);
         }
 
         .box {
@@ -250,7 +251,7 @@
         <source src="./error.mp3" type="audio/mp3">
     </audio>
 
-    <div class="pasekzadan" onmousedown="fokus(0)">
+    <div class="pasekzadan" onmousedown="fokus(0); $('.icon-context-menu').hide();">
         <div class="pasekprzyciski"></div>
 
         <div class="czas" title="">
@@ -265,23 +266,56 @@
                 <div id="second"></div>
             </div>
         </div>
-        <div class="toggleOkna" title="Pokaż pulpit" onclick="toggleOkna()"></div>
+        <div class="toggleOkna" title="Pokaż pulpit" onclick="toggleOkna()" onmouseenter="startDesktopPreviewHover()" onmouseleave="stopDesktopPreviewHover()"></div>
     </div>
 
-    <div class="pulpit" onmousedown="fokus(-1)">
+    <div class="pulpit" onmousedown="fokus(-1); $('.icon-context-menu').hide();">
+        <!-- Ikony pulpitu -->
+        <div class="desktop-icon" data-app="kutaksuck.app" style="left: 30px; top: 30px;">
+            <div class="icon-emoji">🎮</div>
+            <div class="icon-label">Kółko i krzyżyk</div>
+        </div>
+
+        <div class="desktop-icon" data-app="kalkulator.app" style="left: 30px; top: 170px;">
+            <div class="icon-emoji">🧮</div>
+            <div class="icon-label">Kalkulator</div>
+        </div>
+        
+        <div class="desktop-icon" data-app="terminal.app" style="left: 30px; top: 310px;">
+            <div class="icon-emoji">⌨️</div>
+            <div class="icon-label">Terminal</div>
+        </div>
+        
+        <div class="desktop-icon" data-app="ustawienia.app" style="left: 30px; top: 450px;">
+            <div class="icon-emoji">🛠️</div>
+            <div class="icon-label">Ustawienia</div>
+        </div>
         <div class="wersja">
             <a href="https://github.com/mrkusypl/KusOS" target="_blank"><img src="./kusOSlogoSVG.svg"
                     title="Przejdź na GitHub" alt="KusOS - logo" /></a><br />
-            KusOS <span class="build"></span><br />
         </div>
     </div>
 
     <div class="context-menu" id="context-menuPulpit">
-        <div class="przyciskMenu" onclick="otworzOkno('kutaksuck.app')">🎮 Kółko i krzyżyk</div>
-        <div class="przyciskMenu" onclick="otworzOkno('terminal.app')">⌨️ Terminal</div>
         <div class="przyciskMenu" onclick="otworzOkno('ustawienia.app')">🛠️ Ustawienia</div>
     </div>
-    <div id="okno1" class="okno resizable minimized ui-draggable oknoActive" onmousedown="fokus(1)"
+    
+    <div class="context-menu" id="context-menuOkno1">
+        <div class="przyciskMenu" onclick="zresetujPozycjeOkna(1)">
+            <div>Zresetuj pozycję</div>
+            <div class="shortcut"></div>
+        </div>
+        <div class="przyciskMenu minimalizujMenu" onclick="minimalizujModal(1)">
+            <div class="minimalizujTekst">Minimalizuj</div>
+            <div class="shortcut">Shift + 🡇</div>
+        </div>
+        <div class="przyciskMenu" onclick="closeModal(1, 0)">
+            <div>Zamnkij</div>
+            <div class="shortcut">Shift + F4</div>
+        </div>
+    </div>
+    
+    <div id="okno1" class="okno resizable minimized ui-draggable oknoActive" onmousedown="fokus(1); $('.icon-context-menu').hide();" oncontextmenu="showContextMenuOkno1(event)"
         style="opacity: 1; transform: scale(1) rotateX(0deg); pointer-events: auto; left: 432.39px; top: 216px; z-index: 7;"
         resizable="false">
         <div class="pasek ui-draggable-handle">
@@ -306,12 +340,12 @@
         <div class="content" style="display: flex; flex-direction: column">
             <div
                 style=" width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
-                <div style="font-size: 21px">Ustaw kolor wiodący:</div>
+                <div style="font-size: 21px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);">Ustaw kolor wiodący:</div>
                 <input style="margin-left: 100px;" type="color" id="kolorInput">
             </div>
             <div
                 style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
-                <div style="font-size: 21px">Tryb wyświetlania:</div>
+                <div style="font-size: 21px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);">Tryb wyświetlania:</div>
                 <select style="margin-left: 100px;" id="modeSelect">
                     <option value="light" id="jasny">Jasny</option>
                     <option value="dark" id="ciemny" selected="selected">Ciemny</option>
@@ -319,7 +353,7 @@
             </div>
             <div
                 style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
-                <div style="font-size: 21px">Pozycja paska:</div>
+                <div style="font-size: 21px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);">Pozycja paska:</div>
                 <select style="margin-left: 100px;" id="pasekSelect">
                     <option value="gora" id="gora">Góra</option>
                     <option value="dol" id="dol" selected="selected">Dół</option>
@@ -327,7 +361,7 @@
             </div>
             <div
                 style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
-                <div style="font-size: 21px">Zegar analogowy:</div>
+                <div style="font-size: 21px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);">Zegar analogowy:</div>
                 <select style="margin-left: 100px;" id="zegarSelect">
                     <option value="wylZegar" id="wylZegar" selected="selected">Wyłącz</option>
                     <option value="wlZegar" id="wlZegar">Włącz</option>
@@ -335,27 +369,49 @@
             </div>
             <div
                 style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
-                <div style="font-size: 21px">Tapeta:</div>
+                <div style="font-size: 21px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);">Wyświetlanie sekund:</div>
+                <select style="margin-left: 100px;" id="wyswietlSekundy">
+                    <option value="wylSekundy" id="wylSekundy">Wyłącz</option>
+                    <option value="wlSekundy" id="wlSekundy" selected="selected">Włącz</option>
+                </select>
+            </div>
+            <div
+                style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 21px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);">Tapeta:</div>
                 <select style="margin-left: 100px;" id="tapetaSelect">
                     <option value="wallpaper1.jpg" id="wallpaper1" selected="selected">kusOS</option>
                     <option value="wallpaper2.jpg" id="wallpaper2">Tutel</option>
                     <option value="wallpaper3.jpg" id="wallpaper3">Pracownik</option>
                     <option value="wallpaper4.jpg" id="wallpaper4">Pływak</option>
+                    <option value="wallpaper5.jpg" id="wallpaper5">Logo</option>
                     <option value="nic" id="nic">Nic</option>
                 </select>
             </div>
             <div
                 style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
-                <div style="font-size: 21px">Wyświetl wersję systemu:</div>
+                <div style="font-size: 21px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);">Wyświetl wersję systemu:</div>
                 <select style="margin-left: 100px;" id="wersjaSelect">
                     <option value="wlWersja" id="wlWersja" selected="selected">Włącz</option>
                     <option value="wylWersja" id="wylWersja">Wyłącz</option>
                 </select>
             </div>
+            <div
+                style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 21px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);">Wyrównywanie ikon do siatki:</div>
+                <select style="margin-left: 100px;" id="gridSnapSelect">
+                    <option value="wlGridSnap" id="wlGridSnap" selected="selected">Włącz</option>
+                    <option value="wylGridSnap" id="wylGridSnap">Wyłącz</option>
+                </select>
+            </div>
+            <div
+                style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <div style="font-size: 21px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);">Ręczne wyrównanie:</div>
+                <button style="margin-left: 100px;" id="recneWyrównanie" onclick="alignAllIconsToGrid()">Wyrównaj ikony</button>
+            </div>
             <div style="width: 100%; border-bottom: 2px solid var(--kolor); margin: 20px 0 20px 0"></div>
             <div
                 style="width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
-                <div style="font-size: 21px">Ustawienia fabryczne:</div>
+                <div style="font-size: 21px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);">Ustawienia fabryczne:</div>
                 <button style="margin-left: 100px;" id="ustawieniaFabryczne"
                     onclick="ustawieniaFabryczne()">Przywróć</button>
             </div>
